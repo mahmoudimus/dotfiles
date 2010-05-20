@@ -1,0 +1,16 @@
+[global_config]
+[keybindings]
+  hide_window = <Ctrl><Shift>F11
+[profiles]
+  [[default]]
+    use_system_font = False
+    font = Menlo 9
+[layouts]
+  [[default]]
+    [[[child1]]]
+      type = Terminal
+      parent = window0
+    [[[window0]]]
+      type = Window
+      parent = ""
+[plugins]

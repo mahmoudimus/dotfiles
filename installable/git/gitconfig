@@ -1,0 +1,35 @@
+[color]
+    diff = auto
+    status = auto
+    branch = auto
+    interactive = auto
+    ui = true
+
+[push]
+    default = matching
+
+[alias]
+    st = status
+    ci = commit
+    qc = commit --no-verify
+    co = checkout
+    br = branch
+
+    f = fetch
+    mnoff = merge --no-ff
+    cp = cherry-pick
+    ff = pull --ff-only
+    pr = pull --rebase
+    pnoff = pull --no-ff
+    up = pull --rebase
+    dc = diff --color
+    p  = push
+    lg = log --decorate
+    wu = log --stat origin..@{0}
+    logs = log --stat --decorate
+    logg = log --graph --decorate --branches --remotes
+    override = !sh -c 'echo git add -- $0 && echo git reset HEAD -q -- $0 && echo git checkout -- $0'
+    unadd = rm --cached 
+[user]
+	name = Mahmoud Abdelkader
+	email = mahmoud@milo.com
