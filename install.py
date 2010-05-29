@@ -13,6 +13,8 @@ class Installer(object):
     def __init__(self):
         self.options, self.arguments = self._get_options()
         self.validate_commands()
+        self._strategies = {"all": All,
+                            "default": Default}
 
     def _get_options(self):
         parser = optparse.OptionParser()
@@ -49,5 +51,17 @@ class InstallationStrategy(object):
 
 
 class Default(InstallationStrategy):
-    pass
+
+    def install(self):
+        pass
+
+
+class All(InstallationStrategy):
+
+    def install(self):
+        pass
+
+if __name__ == '__main__':
+    installer = Installer()
+    installer.get_installation_strategy().install()
 
