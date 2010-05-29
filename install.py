@@ -33,7 +33,7 @@ class Installer(object):
     def run_installations(self):
         self.get_install_strategy().install()
 
-    def get_install_strategy(self):
+    def get_installation_strategy(self):
         strategy = None
 
         if self.options.all:
@@ -41,10 +41,14 @@ class Installer(object):
         else:
             strategy = self._strategies.get(self.arguments[0], "default")
 
-        return strategy
+        return strategy(self.options, self.arguments)
 
 
 class InstallationStrategy(object):
+
+    def __init__(self, options, arguments):
+        self.options = options
+        self.arguments = arguments
 
     def install(self):
         raise NotImplementedError
