@@ -39,4 +39,10 @@ cdpycloud()
     cd /pluto/pycloud >& /dev/null
 }
 
+cdsnippets()
+{
+    pushd $(pwd) >& /dev/null
+    cd ~/code/snippets/ >& /dev/null
+}
+
 # kernprof.py product_page_profiling.py 2345; pyprof2calltree -i product_page_profiling.py.prof -k

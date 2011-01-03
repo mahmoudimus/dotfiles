@@ -1,4 +1,5 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
+# ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
@@ -152,9 +153,16 @@ go_go_gadget_etags() {
     etags --append --include=$(echo ${TAGSDIR}/*tags | sed 's@ @ --include=@g')
 }
 
-export WORKON_HOME=$HOME/.virtualenvs
-if [ -e /usr/local/bin/virtualenvwrapper_bashrc ]; then
-    source /usr/local/bin/virtualenvwrapper_bashrc
+ccf() {
+    TARGET_DIRECTORY=${1:?"What's the directory to clean up, champ?"}
+    NUM_CLEANED=$(find ${TARGET_DIRECTORY} -follow -iregex '.*.py[co]' | wc -l)
+    find ${TARGET_DIRECTORY} -follow -iregex '.*.py[co]' | xargs rm
+    echo "Cleaned ${NUM_CLEANED} files. :)"
+}
+
+export WORKON_HOME=$HOME/venvs
+if [ -e /usr/local/bin/virtualenvwrapper.sh ]; then
+    source /usr/local/bin/virtualenvwrapper.sh
 fi
 
 TARGET_DIR=/pluto/local
