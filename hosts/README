@@ -1,4 +1,0 @@
-When installing, if the module that was chosen for installation is on a host with a hostname in this directory, the hostname directory is checked for a file with the same name as the installed module. It can be more than one file, as long as they're grouped by hostname.
-
-Whatever is in this hostname directory is then _CONCATENATED_ to the generated file, giving you overriding access to anything set in the desired module to be installed.
-
