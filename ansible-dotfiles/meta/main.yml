@@ -1,0 +1,16 @@
+---
+galaxy_info:
+  author: Mahmoud Abdelkader
+  description: Sets up dotfiles
+  company: mahmoudimus
+  license: MIT
+  min_ansible_version: 1.8
+  platforms:
+  - name: OSX
+    versions:
+    - all
+  categories:
+  - system
+
+dependencies: []
+  

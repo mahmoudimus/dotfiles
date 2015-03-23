@@ -1,0 +1,7 @@
+---
+
+- include: homebrew.yml
+
+- include: cask.yml
+
+- include: aux.yml

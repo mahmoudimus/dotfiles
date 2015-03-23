@@ -1,0 +1,20 @@
+---
+- hosts: localhost
+
+  roles:
+    # setup the common environment files
+    - role: osx.common_env
+      when: ansible_distribution == 'MacOSX'
+
+    # setup the homebrew, caskroom, gems configuration
+    - role: osx.homebrew
+      when: ansible_distribution == 'MacOSX'
+
+
+  tasks:
+
+    - meta: flush_handlers
+
+    - name: install applications from Brewfile
+      
+    - name: install configurations from mackup
