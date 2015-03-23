@@ -1,0 +1,50 @@
+# -*- mode: ruby -*-
+# Homebrew
+# --------------------
+#tap Homebrew/brewdler
+tap 'homebrew/dupes'
+
+brew 'ansible'
+brew 'ctags'
+brew 'curl'
+brew 'fish --HEAD'
+brew 'git'
+brew 'grep --with-default-names'
+brew 'mysql'
+brew 'nginx'
+brew 'node'
+brew 'openssl'
+brew 'rbenv --HEAD'
+brew 'reattach-to-user-namespace'
+brew 'ruby-build'
+brew 'sqlite'
+brew 'the_silver_searcher'
+brew 'tmux'
+brew 'watchman'
+brew 'vim'
+
+# Cask
+# --------------------
+cask 'dropbox'
+cask 'flash'
+cask 'forklift'
+cask 'iterm2'
+cask 'mailbox'
+cask 'monotype-skyfonts'
+cask 'skype'
+cask 'spectacle'
+cask 'spotify'
+cask 'steermouse'
+cask 'transmission'
+cask 'vagrant'
+cask 'virtualbox'
+cask 'vlc'
+cask 'ynab'
+
+# Appstore & manual
+# --------------------
+#
+# 1/ Chrome and Firefox 1password integration requires
+#    them to be installed in /Applications directory
+#
+# dash, sunrise, chrome, firefox, pushpal, 1password, keynote, numbers, pages
