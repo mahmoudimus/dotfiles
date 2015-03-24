@@ -35,6 +35,8 @@ An OS-aware ansible playbook composed of roles that install the applications req
 - https://github.com/thoughtbot/dotfiles
 - https://github.com/joshingly/dotfiles
 - https://github.com/tmaeda1981jp/dotfiles
+- https://github.com/hanjianwei/dotfiles
+- https://github.com/muchzill4/setup
 
 ### Blogs
 
