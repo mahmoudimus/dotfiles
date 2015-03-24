@@ -80,7 +80,7 @@ After you're done, run `mackup restore`. Done :-)
 - This is only for a workstation, what about dotfiles for sysadmining?
 - Submit to [iusethis](http://iusethis.com/) and [howistart](https://howistart.org/)?
 - Explore [`GNU stow`](https://turanct.wordpress.com/2013/09/12/track-your-dotfiles-and-homedir-configurations-in-git-using-gnu-stow/)?
-  - Explore `dotgpg` with `GNU stow` instead of Mackup.
+  - Explore [dotgpg](https://github.com/ConradIrwin/dotgpg) with `GNU stow` instead of Mackup.
 
 ## Bugs
 
