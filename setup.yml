@@ -3,8 +3,7 @@
 
   roles:
     # setup the common environment files
-    - role: osx.common_env
-      when: ansible_distribution == 'MacOSX'
+    - role: '../dotfiles'
 
     # setup the homebrew, caskroom, gems configuration
     - role: osx.homebrew
@@ -16,5 +15,7 @@
     - meta: flush_handlers
 
     - name: install applications from Brewfile
+      debug: msg='nope'
       
     - name: install configurations from mackup
+      debug: msg='nope1'

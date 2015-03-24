@@ -3,7 +3,3 @@
 # aux installs the brewdler gem
 - name: Tap the brewdler repository
   homebrew_tap: tap=Homebrew/brewdler state=present
-
-- name: install 
-  # homebrew: name=brewdler state=latest update_homebrew=yes
-  # when: cask_installed.stat.exists == false

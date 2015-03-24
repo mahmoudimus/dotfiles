@@ -1,7 +1,7 @@
 ---
 
 - name: Is homebrew's cask (caskroom/cask) installed?
-  stat: path={{ install_dir }}/bin/brew-cask
+  stat: path=/usr/local/bin/brew-cask
   register: cask_installed
 
 - name: Tap the cask repository
@@ -11,3 +11,19 @@
 - name: install brew-cask
   homebrew: name=brew-cask state=latest update_homebrew=yes
   when: cask_installed.stat.exists == false
+
+- name: Are brew-cask environment variables set?
+  stat: path=/Users/mahmoud/.common_env/sourceable_99_cask.sh
+  register: cask_env_set
+
+- name: Set brew-cask environment variable if cask doesn't exist
+  copy: content=''
+        dest=/Users/mahmoud/.common_env/sourceable_99_cask.sh
+  when: cask_env_set.stat.exists == false
+
+- name: add cask opts as a sourced file in common_env
+  lineinfile: dest=/Users/mahmoud/.common_env/sourceable_99_cask.sh
+              regexp='^export HOMEBREW_CASK_OPTS'
+              line='export HOMEBREW_CASK_OPTS="--appdir=/Applications"'
+              state=present
+
