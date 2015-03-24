@@ -28,9 +28,9 @@
       register: osx_defaults
 
     - name: run defaults
-      shell: /tmp/osx-defaults.sh
+      command: /tmp/osx-defaults.sh
       register: osx_defaults.changed
-
+    
     # configure zsh
     - name: configure zsh, if installed
       stat: path=/usr/local/bin/zsh
@@ -48,8 +48,10 @@
       shell: chsh -s /usr/local/bin/zsh
       when: zsh_installed.stat.exists == true
 
-    # configure dropbox
-    # configure emacs
-    # - name: pull down emacs configuration
-    #   git: repo=ssh://git@github.com/mahmoudimus/emacs.d.git
-    #   	   dest=/Users/mahmoud/.emacs.d
+    # configure zsh
+    - name: install the zsh configuration
+      shell: ./setup.zsh chdir={{ ansible_env.PWD }}/files/zsh
+    
+    # link emacs
+    - name: link the emacs configuration
+      file: src={{ ansible_env.PWD }}/files/emacs.d dest=/Users/mahmoud/.emacs.d/ state=link
