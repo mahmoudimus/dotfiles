@@ -10,7 +10,7 @@
 
 ## Bootstraping
 
-To bootstrap a workstation, execute `setup.sh` which will install [Ansible](http://ansible.com) on the system.
+To bootstrap a workstation, execute `setup.sh` which will install [Ansible](http://ansible.com) on the system. If you're on OSX, it will also install xcode and the xcode command-line utilities.
 
 ### Requirements
 
@@ -18,10 +18,15 @@ To bootstrap a workstation, execute `setup.sh` which will install [Ansible](http
 - [homebrew-brewdler](https://github.com/muchzill4/setup/blob/master/osx/Brewfile)
 - [mackup](https://github.com/lra/mackup)
 
-## ansible-dotfiles
+## Ansible Playbook?
 
-An OS-aware ansible playbook composed of roles that install the applications required for setting up the workstation.
+Yes. This is an OS-aware ansible playbook composed of roles that install the applications required for setting up the workstation.
 
+Here's how to run this ansible playbook:
+
+```bash
+ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook  -i 127.0.0.1, -vvvv setup.yml
+```
 
 ## References
 

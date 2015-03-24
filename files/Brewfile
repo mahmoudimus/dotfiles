@@ -10,7 +10,6 @@ brew 'zsh'
 brew 'git'
 brew 'hub'
 brew 'curl'
-brew 'ack'
 brew 'autoconf'
 brew 'automake'
 brew 'gcc'
@@ -34,7 +33,6 @@ brew 'ruby-build'
 # brew 'emacs', args: ['cocoa', 'srgb', 'with-gnutls']
 
 # mac apps
-cask 'xcode'
 cask 'google-chrome'
 cask 'dropbox'
 cask 'monotype-skyfonts'
@@ -62,6 +60,4 @@ cask 'caffeine'
 cask 'dash'
 cask 'istat-menus'
 cask 'sourcetree'
-cask 'twitter'
-cask 'sunrise'
 
