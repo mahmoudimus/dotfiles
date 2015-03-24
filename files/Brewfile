@@ -29,6 +29,12 @@ brew 'mackup'
 brew 'python', args: ['--framework']
 brew 'rbenv', args: ['--HEAD']
 brew 'ruby-build'
+brew 'gnu-sed', args: ['--with-default-names']
+brew 'bash'
+brew 'bash-completion'
+brew 'wget', args: ['--with-iri']
+brew 'p7zip'
+brew 'ssh-copy-id'
 
 # brew 'emacs', args: ['cocoa', 'srgb', 'with-gnutls']
 
@@ -60,4 +66,4 @@ cask 'caffeine'
 cask 'dash'
 cask 'istat-menus'
 cask 'sourcetree'
-
+cask 'the-unarchiver'

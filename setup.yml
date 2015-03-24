@@ -23,6 +23,33 @@
       when: brewfile.changed
 
     # configure all osx defaults
+    - name: install osx defaults
+      copy: src=files/osx-defaults.sh dest=/tmp/osx-defaults.sh mode=0755
+      register: osx_defaults
+
+    - name: run defaults
+      shell: /tmp/osx-defaults.sh
+      register: osx_defaults.changed
+
     # configure zsh
-    # configure emacs
+    - name: configure zsh, if installed
+      stat: path=/usr/local/bin/zsh
+      register: zsh_installed
+
+    - name: add homebrew zsh to /etc/shells
+      sudo: yes
+      lineinfile: dest=/etc/shells
+                  regexp="local"
+                  line="/usr/local/bin/zsh"
+                  state=present
+      when: zsh_installed.stat.exists == true
+
+    - name: set zsh as default shell
+      shell: chsh -s /usr/local/bin/zsh
+      when: zsh_installed.stat.exists == true
+
     # configure dropbox
+    # configure emacs
+    # - name: pull down emacs configuration
+    #   git: repo=ssh://git@github.com/mahmoudimus/emacs.d.git
+    #   	   dest=/Users/mahmoud/.emacs.d

@@ -56,3 +56,4 @@ function install_xcode() {
 if [[ "$OSTYPE" == "darwin"* ]]; then
     install_xcode
 fi
+

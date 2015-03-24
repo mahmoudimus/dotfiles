@@ -25,7 +25,7 @@ Yes. This is an OS-aware ansible playbook composed of roles that install the app
 Here's how to run this ansible playbook:
 
 ```bash
-ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook  -i 127.0.0.1, -vvvv setup.yml
+ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook  -i 127.0.0.1, -vvvv --ask-sudo-pass setup.yml
 ```
 
 ## References
