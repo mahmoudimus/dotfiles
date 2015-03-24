@@ -9,13 +9,19 @@
     - role: osx.homebrew
       when: ansible_distribution == 'MacOSX'
 
-
   tasks:
 
     - meta: flush_handlers
 
-    - name: install applications from Brewfile
-      debug: msg='nope'
+    # install all Brew apps
+    - name: copy over Brewfile
+      copy: src=files/Brewfile dest=/tmp/Brewfile
+      register: brewfile
       
-    - name: install configurations from mackup
-      debug: msg='nope1'
+    - name: install applications from Brewfile
+      shell: brew brewdle chdir=/tmp/
+      when: brewfile.changed
+
+    # configure all osx defaults
+    # configure zsh
+    # configure dropbox
