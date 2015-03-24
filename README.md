@@ -1,38 +1,49 @@
-Role Name
-=========
+                .___      __    _____.__.__
+              __| _/_____/  |__/ ____\__|  |   ____   ______
+             / __ |/  _ \   __\   __\|  |  | _/ __ \ /  ___/
+            / /_/ (  <_> )  |  |  |  |  |  |_\  ___/ \___ \
+       _____\____ |\____/|__|  |__|  |__|____/\___  >____  >_____
+      /_____/    \/                               \/     \/_____/
 
-A brief description of the role goes here.
 
-Requirements
-------------
+#
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+## Bootstraping
 
-Role Variables
---------------
+To bootstrap a workstation, execute `setup.sh` which will install [Ansible](http://ansible.com) on the system.
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+### Requirements
 
-Dependencies
-------------
+- [ansible 1.8](http://ansible.com)
+- [homebrew-brewdler](https://github.com/muchzill4/setup/blob/master/osx/Brewfile)
+- [mackup](https://github.com/lra/mackup)
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+## ansible-dotfiles
 
-Example Playbook
-----------------
+An OS-aware ansible playbook composed of roles that install the applications required for setting up the workstation.
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+## References
 
-License
--------
+### Github
 
-BSD
+- https://osxc.github.io/
+- https://github.com/peterhajas/dotfiles
+- https://github.com/palcu/dotfiles
+- https://github.com/danieljaouen/ansible-dotfiles
+- https://github.com/spencergibb/battleschool
+- https://github.com/thoughtbot/dotfiles
+- https://github.com/joshingly/dotfiles
+- https://github.com/tmaeda1981jp/dotfiles
 
-Author Information
-------------------
+### Blogs
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+- http://il.luminat.us/blog/2014/04/19/how-i-fully-automated-os-x-with-ansible/
+- http://www.eightbitraptor.com/post/bootstrapping-osx-ansible
+- https://dotfiles.github.io/
+
+## TODO
+
+- This is only for a workstation, what about dotfiles for sysadmining?
+- Submit to [iusethis](http://iusethis.com/) and [howistart](https://howistart.org/)?
+- Explore `stow`?
