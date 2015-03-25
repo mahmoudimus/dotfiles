@@ -42,3 +42,16 @@ defaults write com.apple.dock autohide -bool true
 defaults write NSGlobalDomain KeyRepeat -int 0
 defaults write -g InitialKeyRepeat -int 10
 defaults write -g KeyRepeat -int 1
+
+# Sizeup
+
+# Start SizeUp at login
+defaults write com.irradiatedsoftware.SizeUp StartAtLogin -bool true
+
+# Don’t show the preferences window on next start
+defaults write com.irradiatedsoftware.SizeUp ShowPrefsOnNextStart -bool false
+
+# Dock
+defaults write com.apple.dock magnification -boolean true
+defaults write com.apple.dock tilesize -integer 10
+defaults write com.apple.dock largesize -float 256.000000
