@@ -35,6 +35,10 @@ brew 'bash-completion'
 brew 'wget', args: ['--with-iri']
 brew 'p7zip'
 brew 'ssh-copy-id'
+brew 'maven'
+brew 'emacs'
+brew 'go', args: ['--with-cc-common']
+
 
 # brew 'emacs', args: ['cocoa', 'srgb', 'with-gnutls']
 
@@ -46,7 +50,6 @@ cask 'spotify'
 cask 'evernote'
 cask 'skitch'
 cask 'iterm2'
-cask 'emacs'
 cask 'virtualbox'
 cask 'vagrant'
 cask 'skitch'
