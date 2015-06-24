@@ -2,8 +2,10 @@
 # rbenv stuff here
 
 # java stuff
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_06.jdk/Contents/Home
-export PATH=${PATH}:${HOME}/code/java/play/current
+export JAVA_HOME="$(/usr/libexec/java_home -v 1.8)"
+
+# go
+export PATH=$PATH:/usr/local/opt/go/libexec/bin
 
 # ec2 stuff
 export AWS_BIN_HOME=${HOME}/bin/aws
@@ -54,3 +56,5 @@ export KITCHEN_SYNC_MODE=rsync
 
 # docker
 export DOCKER_HOST=10.2.0.10:2375
+export DOCKER_HOST_VM_PATH=${HOME}/code/ops/docker/docker-host-osx/
+export DOCKER_PHUSION_INSECURE_KEY=${HOME}/code/ops/docker/phusion_insecure_key

@@ -1,9 +1,9 @@
-# set -x
+set +x
 
 if [ -n "$ZSH_VERSION" ]; then
-  LOC=$0
+    LOC=$0
 elif [ -n "$BASH_VERSION" ]; then
-  LOC=$BASH_SOURCE
+    LOC=$BASH_SOURCE
 fi
 
 CWD=$(realpath $(dirname $LOC))

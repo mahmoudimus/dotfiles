@@ -9,16 +9,16 @@ function .. (){
 }
 
 function realpath() {
-  OURPWD=$PWD
-  cd "$(dirname "$1")"
-  LINK=$(readlink "$(basename "$1")")
-  while [ "$LINK" ]; do
-    cd "$(dirname "$LINK")"
+    OURPWD=$PWD
+    cd "$(dirname "$1")"
     LINK=$(readlink "$(basename "$1")")
-  done
-  REALPATH="$PWD/$(basename "$1")"
-  cd "$OURPWD"
-  echo $REALPATH
+    while [ "$LINK" ]; do
+        cd "$(dirname "$LINK")"
+        LINK=$(readlink "$(basename "$1")")
+    done
+    REALPATH="$PWD/$(basename "$1")"
+    cd "$OURPWD"
+    echo $REALPATH
 }
 
 function extract () {
@@ -159,4 +159,33 @@ function setup_gihub_repo() {
     git remote add origin $GIT_REPO
     git push -u origin master
     unset cwd
+}
+
+function clone_organization() {
+    set -x
+    GIT_ORG_NAME=${1:?"Need an org name"}
+    CONFIG_FILE=${2:=~/.github.cfg}
+    GH_USER=$(awk -F '= ' '{if (! ($0 ~ /^;/) && $0 ~ /user/) print $2}' ${CONFIG_FILE})
+    GH_PW=$(awk -F '= ' '{if (! ($0 ~ /^;/) && $0 ~ /password/) print $2}' ${CONFIG_FILE})
+    curl -u ${GH_USER}:${GH_PW} \
+         -s "https://api.github.com/orgs/${GIT_ORG_NAME}/repos?per_page=200" \
+          | ruby -rubygems -e 'require "json"; JSON.load(STDIN.read).each { |repo| %x[git clone #{repo["ssh_url"]} ]}'
+}
+
+function update_all_git_repos() {
+    TPUT_BIN=/usr/bin/tput
+    for e in *;
+    do
+        if [ ! -d $e ]; then
+            echo "$(${TPUT_BIN} setaf 1)Not a directory: $e $(${TPUT_BIN} sgr 0)";
+            continue;
+        fi
+
+        cd $e
+        git pull
+        if [ $? -ne 0 ]; then
+            echo "$(${TPUT_BIN} setaf 1)Git didnt succeed on: $e $(${TPUT_BIN} sgr 0)";
+        fi;
+        cd ../;
+    done
 }
