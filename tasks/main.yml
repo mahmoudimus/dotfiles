@@ -4,34 +4,35 @@
   file: path=/Users/mahmoud/.common_env state=directory
 
 - name: copy and install common environment files
-  copy: src=common_env/{{ item }}
-        dest=/Users/mahmoud/.common_env/{{ item }}
+  file: src=common_env/{{ item }}
+        path=/Users/mahmoud/.common_env/{{ item }}
   with_items:
     - aliases.sh
     - exports_bash.sh
     - funcs_bash.sh
     - sourcer.sh
 
-- name: get current active shell
-  shell: |
-     finger mahmoud | grep -i Shell | cut -d: -f3 | tr -d ' '
-  register: default_shell
+# this part is handled by zsh setup script
+# - name: get current active shell
+#   shell: |
+#      finger mahmoud | grep -i Shell | cut -d: -f3 | tr -d ' '
+#   register: default_shell
 
-- name: ensure login file exists for bash
-  file: path=/Users/mahmoud/.bash_profile state=touch
-  when: default_shell.stdout.find('bash') != -1
+# - name: ensure login file exists for bash
+#   file: path=/Users/mahmoud/.bash_profile state=touch
+#   when: default_shell.stdout.find('bash') != -1
 
-- name: ensure login file exists for zsh
-  file: path=/Users/mahmoud/.zshenv state=touch
-  when: default_shell.stdout.find('zsh') != -1
+# - name: ensure login file exists for zsh
+#   file: path=/Users/mahmoud/.zshenv state=touch
+#   when: default_shell.stdout.find('zsh') != -1
 
-- name: source this common env from every known dotfile
-  ignore_errors: True
-  lineinfile: dest=/Users/mahmoud/{{ item[0] }}
-              regexp='source ~/\.common_env/{{ item[1] }}'
-              line='source ~/.common_env/{{ item[1] }}'
-              owner=mahmoud
-              mode=0744
-  with_nested:
-  - [ '.bash_profile', '.bash_login', '.zshrc', '.zshenv' ]
-  - [ 'aliases.sh', 'exports_bash.sh', 'funcs_bash.sh', 'sourcer.sh' ]
+# - name: source this common env from every known dotfile
+#   ignore_errors: True
+#   lineinfile: dest=/Users/mahmoud/{{ item[0] }}
+#               regexp='source ~/\.common_env/{{ item[1] }}'
+#               line='source ~/.common_env/{{ item[1] }}'
+#               owner=mahmoud
+#               mode=0744
+#   with_nested:
+#   - [ '.bash_profile', '.bash_login', '.zshrc', '.zshenv' ]
+#   - [ 'aliases.sh', 'exports_bash.sh', 'funcs_bash.sh', 'sourcer.sh' ]
