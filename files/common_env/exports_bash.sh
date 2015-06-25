@@ -42,7 +42,7 @@ export PATH=/usr/local/bin/packer:${PATH}
 export CONFUCIUS_ROOT=/Users/mahmoud/code/bal/rb/confucius/
 
 
-export SSL_CERT_FILE=/usr/local/opt/curl-ca-bundle/share/ca-bundle.crt
+#export SSL_CERT_FILE=/usr/local/opt/curl-ca-bundle/share/ca-bundle.crt
 
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
