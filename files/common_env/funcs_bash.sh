@@ -162,7 +162,7 @@ function setup_gihub_repo() {
 }
 
 function clone_organization() {
-    set -x
+    set +x
     GIT_ORG_NAME=${1:?"Need an org name"}
     CONFIG_FILE=${2:=~/.github.cfg}
     GH_USER=$(awk -F '= ' '{if (! ($0 ~ /^;/) && $0 ~ /user/) print $2}' ${CONFIG_FILE})
