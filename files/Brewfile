@@ -39,7 +39,7 @@ brew 'maven'
 brew 'emacs'
 brew 'jq'
 brew 'go', args: ['--with-cc-common']
-
+brew 'unison'
 
 # brew 'emacs', args: ['cocoa', 'srgb', 'with-gnutls']
 
