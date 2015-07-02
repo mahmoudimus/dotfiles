@@ -37,6 +37,7 @@ brew 'p7zip'
 brew 'ssh-copy-id'
 brew 'maven'
 brew 'emacs'
+brew 'jq'
 brew 'go', args: ['--with-cc-common']
 
 
@@ -72,4 +73,3 @@ cask 'sourcetree'
 cask 'the-unarchiver'
 cask 'skim'
 cask 'slack'
-
