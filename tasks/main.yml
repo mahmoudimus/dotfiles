@@ -6,6 +6,7 @@
 - name: copy and install common environment files
   file: src=common_env/{{ item }}
         path=/Users/mahmoud/.common_env/{{ item }}
+        state=link
   with_items:
     - aliases.sh
     - exports_bash.sh
