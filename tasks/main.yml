@@ -4,7 +4,7 @@
   file: path=/Users/mahmoud/.common_env state=directory
 
 - name: copy and install common environment files
-  file: src=common_env/{{ item }}
+  file: src=files/common_env/{{ item }}
         path=/Users/mahmoud/.common_env/{{ item }}
         state=link
   with_items:
