@@ -1,6 +1,6 @@
 [submodule "files/zsh"]
-	path = files/zsh
-	url = ssh://git@github.com/mahmoudimus/zsh.git
+    path = files/zsh
+    url = https://github.com/mahmoudimus/zsh.git
 [submodule "files/emacs.d"]
-	path = files/emacs.d
-	url = ssh://git@github.com/mahmoudimus/.emacs.d.git
+    path = files/emacs.d
+#    url = https://github.com/mahmoudimus/.emacs.d.git
