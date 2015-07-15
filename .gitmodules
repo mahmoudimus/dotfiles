@@ -3,4 +3,4 @@
     url = https://github.com/mahmoudimus/zsh.git
 [submodule "files/emacs.d"]
     path = files/emacs.d
-#    url = https://github.com/mahmoudimus/.emacs.d.git
+    url = https://github.com/mahmoudimus/.emacs.d.git
