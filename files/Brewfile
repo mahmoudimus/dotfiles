@@ -1,11 +1,15 @@
 # -*- mode: ruby -*-
+
+# taps
 tap 'caskroom/versions'
 tap 'caskroom/fonts'
 tap 'homebrew/dupes'
 
+# brews
 brew 'coreutils'
 brew 'moreutils'
 brew 'findutils'
+brew 'grep'
 brew 'pstree'
 brew 'zsh'
 brew 'git'
@@ -39,10 +43,11 @@ brew 'emacs'
 brew 'jq'
 brew 'go', args: ['--with-cc-common']
 brew 'unison'
+brew 'xmlstarlet'
 
 # brew 'emacs', args: ['cocoa', 'srgb', 'with-gnutls']
 
-# mac apps
+# casks
 cask 'google-chrome'
 cask 'dropbox'
 cask 'monotype-skyfonts'
