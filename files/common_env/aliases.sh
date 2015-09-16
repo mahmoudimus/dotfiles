@@ -80,3 +80,7 @@ show_routes() {
     # sudo route -nv delete 172.17.42.0
     sudo netstat -nr
 }
+
+start_emacs_gui() {
+    /usr/local/bin/emacsclient -c -n
+}
