@@ -50,6 +50,7 @@ cask 'intellij-idea'
 
 
 # brews
+brew 'mackup'
 brew 'coreutils'
 brew 'moreutils'
 brew 'findutils'
