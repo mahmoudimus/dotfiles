@@ -92,4 +92,5 @@ brew 'xmlstarlet'
 brew 'maven'
 brew 'heroku-toolbelt'
 brew 'jenv'
+brew 'htop'
 # brew 'emacs', args: ['cocoa', 'srgb', 'with-gnutls']
