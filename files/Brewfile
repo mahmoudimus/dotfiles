@@ -1,9 +1,53 @@
 # -*- mode: ruby -*-
 
+# args
+cask_args appdir: "/Applications"
+
 # taps
+tap 'caskroom/cask'
 tap 'caskroom/versions'
-tap 'caskroom/fonts'
-tap 'homebrew/dupes'
+tap 'homebrew/cask-fonts'
+tap 'homebrew/core'
+tap 'homebrew/services'
+tap 'railwaycat/emacsmacport'
+
+# casks
+#cask 'google-chrome'
+#cask 'dropbox'
+#cask '1password'
+#cask 'sourcetree'
+cask 'java8'
+cask 'emacs-mac'
+cask 'spotify'
+cask 'skitch'
+cask 'skype'
+cask 'iterm2-nightly'
+cask 'skitch'
+cask 'font-dejavu-sans'
+cask 'font-inconsolata'
+cask 'sizeup'
+cask 'little-snitch'
+cask 'bartender'
+cask 'caffeine'
+cask 'dash'
+cask 'istat-menus'
+cask 'the-unarchiver'
+cask 'skim'
+cask 'slack'
+cask 'evernote'
+
+
+# vagrant & virtualbox
+cask 'virtualbox'
+#cask 'virtualbox4330101610'
+cask 'vagrant'
+
+# java..because
+cask "java" unless system "/usr/libexec/java_home --failfast"
+#cask 'java'
+cask 'intellij-idea'
+#cask "firefox", args: { appdir: "~/my-apps/Applications" }
+
 
 # brews
 brew 'coreutils'
@@ -44,42 +88,7 @@ brew 'jq'
 brew 'go', args: ['--with-cc-common']
 brew 'unison'
 brew 'xmlstarlet'
-
-# brew 'emacs', args: ['cocoa', 'srgb', 'with-gnutls']
-
-# casks
-cask 'google-chrome'
-cask 'dropbox'
-cask 'monotype-skyfonts'
-cask 'spotify'
-cask 'skitch'
-cask 'skype'
-cask 'iterm2-nightly'
-cask 'skitch'
-cask '1password'
-cask 'seil'
-cask 'heroku-toolbelt'
-cask 'font-dejavu-sans'
-cask 'font-inconsolata'
-cask 'colors'
-cask 'karabiner'
-cask 'sizeup'
-cask 'little-snitch'
-cask 'bartender'
-cask 'caffeine'
-cask 'dash'
-cask 'istat-menus'
-cask 'sourcetree'
-cask 'the-unarchiver'
-cask 'skim'
-cask 'slack'
-cask 'evernote'
-
-# vagrant & virtualbox
-cask 'virtualbox4330101610'
-cask 'vagrant'
-
-# java..because
-cask 'java'
 brew 'maven'
-cask 'intellij-idea'
+brew 'heroku-toolbelt'
+brew 'jenv'
+# brew 'emacs', args: ['cocoa', 'srgb', 'with-gnutls']

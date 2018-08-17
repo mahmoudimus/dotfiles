@@ -1,21 +1,5 @@
 ---
 
-- name: Is homebrew's cask (caskroom/cask) installed?
-  stat: path=/usr/local/bin/brew-cask
-  register: cask_installed
-
-- name: Tap the cask repository
-  homebrew_tap: tap=caskroom/cask state=present
-  when: cask_installed.stat.exists == false
-  
-- name: Tap the cask versions
-  homebrew_tap: tap=caskroom/versions state=present
-  when: cask_installed.stat.exists == false
-  
-- name: install brew-cask
-  homebrew: name=brew-cask state=latest update_homebrew=yes
-  when: cask_installed.stat.exists == false
-
 - name: Are brew-cask environment variables set?
   stat: path=/Users/mahmoud/.common_env/sourceable_99_cask.sh
   register: cask_env_set

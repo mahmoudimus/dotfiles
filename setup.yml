@@ -1,6 +1,6 @@
 ---
 - hosts: localhost
-
+  become: false
   roles:
     # setup the common environment files
     - role: '../dotfiles'
@@ -19,6 +19,7 @@
       register: brewfile
       
     - name: install applications from Brewfile
+      become: false
       shell: brew brewdle chdir=/tmp/
       when: brewfile.changed
 
@@ -37,7 +38,6 @@
       register: zsh_installed
 
     - name: add homebrew zsh to /etc/shells
-      sudo: yes
       lineinfile: dest=/etc/shells
                   regexp="local"
                   line="/usr/local/bin/zsh"
@@ -53,5 +53,5 @@
       shell: ./setup.zsh chdir={{ ansible_env.PWD }}/files/zsh
     
     # link emacs
-    - name: link the emacs configuration
-      file: src={{ ansible_env.PWD }}/files/emacs.d dest=/Users/mahmoud/.emacs.d/ state=link
+#    - name: link the emacs configuration
+#      file: src={{ ansible_env.PWD }}/files/emacs.d dest=/Users/mahmoud/.emacs.d/ state=link
