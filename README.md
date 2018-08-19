@@ -68,6 +68,7 @@ After you're done, run `mackup restore`. Done :-)
 ### Similar Projects (?)
 
 - https://github.com/jverdeyen/macplan
+- https://github.com/searls/icloud-dotfiles
 
 ### Blogs
 
