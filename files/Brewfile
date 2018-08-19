@@ -35,7 +35,7 @@ cask 'the-unarchiver'
 cask 'skim'
 cask 'slack'
 cask 'evernote'
-
+cask 'osxfuse'
 
 # vagrant & virtualbox
 cask 'virtualbox'
@@ -91,4 +91,8 @@ brew 'xmlstarlet'
 brew 'maven'
 brew 'heroku-toolbelt'
 brew 'jenv'
+brew 'fzf'
+brew 'ipython'
+brew 'mosh'
+brew 'terminal-notifier'
 # brew 'emacs', args: ['cocoa', 'srgb', 'with-gnutls']
