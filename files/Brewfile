@@ -50,6 +50,7 @@ cask 'intellij-idea'
 
 
 # brews
+brew 'mackup'
 brew 'coreutils'
 brew 'moreutils'
 brew 'findutils'
@@ -95,4 +96,5 @@ brew 'fzf'
 brew 'ipython'
 brew 'mosh'
 brew 'terminal-notifier'
+brew 'htop'
 # brew 'emacs', args: ['cocoa', 'srgb', 'with-gnutls']
