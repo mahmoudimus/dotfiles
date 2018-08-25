@@ -98,4 +98,5 @@ brew 'ipython'
 brew 'mosh'
 brew 'terminal-notifier'
 brew 'htop'
+brew 'bat'
 # brew 'emacs', args: ['cocoa', 'srgb', 'with-gnutls']
