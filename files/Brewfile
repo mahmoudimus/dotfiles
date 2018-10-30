@@ -99,4 +99,6 @@ brew 'mosh'
 brew 'terminal-notifier'
 brew 'htop'
 brew 'bat'
+brew 'wget'
+brew 'imagemagick'
 # brew 'emacs', args: ['cocoa', 'srgb', 'with-gnutls']
