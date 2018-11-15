@@ -38,6 +38,7 @@ cask 'evernote'
 cask 'osxfuse'
 cask 'tunnelblick'
 cask 'wireshark'
+cask 'now'
 
 # vagrant & virtualbox
 cask 'virtualbox'
