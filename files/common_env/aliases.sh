@@ -6,7 +6,7 @@ alias beauty="bcpp -fi $1 >$2"
 alias gvim='gvim -p --remote-tab-silent'
 
 # my defined aliases
-alias code='cd /media/sda3/code 1>/dev/null'
+# alias code='cd /media/sda3/code 1>/dev/null'
 
 #python site libraries
 alias pylibs='python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()"'
