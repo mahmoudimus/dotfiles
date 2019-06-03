@@ -209,3 +209,42 @@ function decode_url() {
 
     unset COMMAND
 }
+
+
+function loop_example () {
+    echo 'e=10; while [ $e -ne 0 ]; do echo "$e" ; e=$(($e - 1));done'
+}
+
+function loopit() {
+    e=${1:?"how many times do you want to loop?"}
+    _cmd=${2:?"cmd? (i.e. /usr/bin/curl)"}
+    shift 2;
+    if [ $# -eq 0 ]; then
+        cat <<EOF
+
+The third parameter should be an array of arguments (i.e. (-o /dev/null -H ... ))
+Here's a working example:
+
+  _arg=(-o /dev/null https://tntcmkg5bn7.SANDBOX.verygoodproxy.com/post -H "Content-type: application/json"); loopit 3 '/usr/bin/curl' "\${_arg[@]}"
+EOF
+        return -1;
+    fi
+    _args=("$@")
+    # for _var in "$@"; do
+    #     _args+=($_var)
+    # done
+    echo $_args
+    while [ $e -ne 0 ]; do
+        ${_cmd} "${_args[@]}";
+        e=$(($e - 1));
+    done
+}
+
+function perfcurl() {
+    _ARGS=(-o /dev/null -s \
+              -w 'Establish Connection: %{time_connect}s\nTTFB: %{time_starttransfer}s\nTotal: %{time_total}s\n' \
+              https://tntcmkg5bn7.SANDBOX.verygoodproxy.com/post   \
+              -H "Content-type: application/json" \
+              -d '{"secret": "foo"}')
+    loopit 10 curl ${_ARGS}
+}
