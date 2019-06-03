@@ -209,6 +209,3 @@ function decode_url() {
 
     unset COMMAND
 }
-
-
-function
