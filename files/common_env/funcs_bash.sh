@@ -189,3 +189,26 @@ function update_all_git_repos() {
         cd ../;
     done
 }
+
+function decode_url() {
+    _ARGS=(-c 'import sys, urllib.parse; print(urllib.parse.unquote(sys.stdin.read()))')
+    COMMAND=python3
+    # test if file descriptor 0 (/dev/stdin) was opened by a terminal
+    # XXX: bash4+ if read -t 0; then
+    if [ -t 0 ]; then
+        # tests for CLI invocation arguments
+        if [ $# -gt 0 ]; then
+            # echo all CLI arguments to command
+            echo "$*" | ${COMMAND} "${_ARGS[@]}"
+        fi
+    else
+        # else if stdin is piped (i.e. not terminal input),
+        # output stdin to command (cat - and cat are shorthand for cat /dev/stdin)
+        cat - | ${COMMAND} "${_ARGS[@]}"
+    fi
+
+    unset COMMAND
+}
+
+
+function
