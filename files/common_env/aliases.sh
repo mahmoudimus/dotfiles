@@ -84,3 +84,6 @@ show_routes() {
 start_emacs_gui() {
     /usr/local/bin/emacsclient -c -n
 }
+alias yaegi='rlwrap yaegi'
+
+alias rgf='rg --files | rg'

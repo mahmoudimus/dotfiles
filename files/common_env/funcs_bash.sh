@@ -248,3 +248,9 @@ function perfcurl() {
               -d '{"secret": "foo"}')
     loopit 10 curl ${_ARGS}
 }
+
+function set_ssl_headers() {
+    export LDFLAGS="-L/usr/local/opt/openssl@1.1/lib"                                     
+    export CPPFLAGS="-I/usr/local/opt/openssl@1.1/include"
+    export PKG_CONFIG_PATH="/usr/local/opt/openssl@1.1/lib/pkgconfig"
+}
