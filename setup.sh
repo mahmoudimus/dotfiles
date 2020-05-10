@@ -18,19 +18,6 @@ abort() {
 
 # Begin Setup
 
-log 'Installing' 'Ansible'
-
-# prefer pip for installing python packages over the older easy_install
-#
-if [[ ! -x `which pip` ]]; then
-    sudo easy_install pip
-fi
-
-if [[ -x `which pip` && ! -x `which ansible` ]]; then
-    sudo CFLAGS=-Qunused-arguments CPPFLAGS=-Qunused-arguments \
-	 pip install ansible
-fi
-
 
 #
 # Mac OSX Only
@@ -55,5 +42,20 @@ function install_xcode() {
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
     install_xcode
+    # install homebrew
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+    brew install python3
 fi
 
+log 'Installing' 'Ansible'
+
+# prefer pip for installing python packages over the older easy_install
+#
+if [[ ! -x `which pip` ]]; then
+    sudo easy_install pip
+fi
+
+if [[ -x `which pip` && ! -x `which ansible` ]]; then
+    sudo CFLAGS=-Qunused-arguments CPPFLAGS=-Qunused-arguments \
+	 /usr/local/bin/pip3 install ansible
+fi
