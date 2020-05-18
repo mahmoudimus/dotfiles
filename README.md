@@ -63,6 +63,7 @@ After you're done, run `mackup restore`. Done :-)
 - https://github.com/joshingly/dotfiles
 - https://github.com/tmaeda1981jp/dotfiles
 - https://github.com/hanjianwei/dotfiles
+- https://github.com/daniruiz/dotfiles
 - https://github.com/muchzill4/setup
 
 ### Similar Projects (?)
