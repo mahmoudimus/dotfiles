@@ -250,7 +250,27 @@ function perfcurl() {
 }
 
 function set_ssl_headers() {
-    export LDFLAGS="-L/usr/local/opt/openssl@1.1/lib"                                     
+    export LDFLAGS="-L/usr/local/opt/openssl@1.1/lib"
     export CPPFLAGS="-I/usr/local/opt/openssl@1.1/include"
     export PKG_CONFIG_PATH="/usr/local/opt/openssl@1.1/lib/pkgconfig"
+}
+
+function function_exists() {
+    declare -f -F $1 > /dev/null
+    return $?
+}
+
+function source_if_exists(){
+    if [[ -s "$1" ]]; then
+        source "$1"
+        return
+    fi
+    return false
+    # function do_it(){
+    #     echo "Hello, old friend."
+    # }
+
+    # if i_should; then
+    #     do_it
+    # fi
 }
