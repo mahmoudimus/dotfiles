@@ -274,3 +274,104 @@ function source_if_exists(){
     #     do_it
     # fi
 }
+
+# https://superuser.com/q/39751/27279
+# Note that PATH should already be marked as exported, so reexporting
+# is not needed.
+
+function pathappend() {
+    # This:
+    #  - checks whether the directory exists
+    #  - is a directory before adding it
+    #  - adds the new directory to the end of the path
+    for ARG in "$@"
+    do
+        if [ -d "$ARG" ] && [[ ":$PATH:" != *":$ARG:"* ]]; then
+            PATH="${PATH:+"$PATH:"}$ARG"  # adds to the end of the path
+        fi
+    done
+}
+
+function pathprepend() {
+    # This:
+    #  - checks whether the directory exists
+    #  - is a directory before adding it
+    #  - adds the new directory to the beginning of the path
+    for ((i=$#; i>0; i--));
+    do
+        ARG=${!i}
+        if [ -d "$ARG" ] && [[ ":$PATH:" != *":$ARG:"* ]]; then
+            PATH="$ARG${PATH:+":$PATH"}" # adds to the front of the path
+        fi
+    done
+}
+
+# USAGE: path_unique [path]
+# path - a colon delimited list. Defaults to $PATH is not specified.
+# RETURNS: `path` with duplicated directories removed
+function path_unique() {
+    in_path=${1:-$PATH}
+    path=':'
+
+    # Wrap the while loop in '{}' to be able to access the updated `path variable
+    # as the `while` loop is run in a subshell due to the piping to it.
+    # https://stackoverflow.com/questions/4667509/shell-variables-set-inside-while-loop-not-visible-outside-of-it
+    printf '%s\n' "$in_path" \
+        | /bin/tr -s ':' '\n'    \
+        | {
+        while read -r dir; do
+            left="${path%:$dir:*}" # remove last occurrence to end
+            if [ "$path" = "$left" ]; then
+                # PATH doesn't contain $dir
+                path="$path$dir:"
+            fi
+        done
+        # strip ':' pads
+        path="${path#:}"
+        path="${path%:}"
+        # return
+        printf '%s\n' "$path"
+    }
+}
+
+function append_paths() { # append a group of paths together, leaving out redundancies
+    # use as: export PATH="$(append_paths "$PATH" "dir1" "dir2")
+    # start at the end:
+    #  - join all arguments with :,
+    #  - split the result on :,
+    #  - pick out non-empty elements which haven't been seen and which are directories,
+    #  - join with :,
+    #  - print
+    perl -le 'print join ":", grep /\w/ && !$seen{$_}++ && -d $_, split ":", join ":", @ARGV;' "$@"
+}
+
+function pathmunge () {
+    if ! echo $PATH | /usr/bin/egrep -q "(^|:)$1($|:)" ; then
+        if [ "$2" = "after" ] ; then
+            PATH=$PATH:$1
+        else
+            PATH=$1:$PATH
+        fi
+    fi
+}
+
+function fixtty() {
+    reset
+    stty stop undef
+    clear
+}
+
+function prune_path() {
+    local new_path=":"
+    local old_ifs="$IFS"
+    IFS=":"
+    for entry in $PATH; do
+        if ! [[ "$new_path" =~ ":${entry}:" ]]; then
+            new_path="${new_path}${entry}:"
+        fi
+    done
+    IFS="$old_ifs"
+    new_path="${new_path#:}"
+    PATH="${new_path%:}"
+    export PATH
+}
