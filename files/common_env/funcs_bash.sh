@@ -261,11 +261,6 @@ function function_exists() {
 }
 
 function source_if_exists(){
-    if [[ -s "$1" ]]; then
-        source "$1"
-        return
-    fi
-    return false
     # function do_it(){
     #     echo "Hello, old friend."
     # }
@@ -273,7 +268,10 @@ function source_if_exists(){
     # if i_should; then
     #     do_it
     # fi
+    if [[ -s "$1" ]]; then source "$1"; return $?; fi
+    return false
 }
+
 
 # https://superuser.com/q/39751/27279
 # Note that PATH should already be marked as exported, so reexporting
@@ -374,4 +372,17 @@ function prune_path() {
     new_path="${new_path#:}"
     PATH="${new_path%:}"
     export PATH
+}
+
+
+function update_presto() {
+    cd $ZPREZTODIR
+    git pull
+    # https://github.com/sorin-ionescu/prezto/issues/1514#issuecomment-347724966
+    git submodule sync
+    git submodule update --init --recursive
+}
+
+function m-color-map() {
+    for i in {0..255}; do print -Pn "%K{$i}  %k%F{$i}${(l:3::0:)i}%f " ${${(M)$((i%6)):#3}:+$'\n'}; done
 }

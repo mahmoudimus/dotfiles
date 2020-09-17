@@ -15,3 +15,8 @@ export EDITOR=${VISUAL}
 
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
+
+if hash glocate > /dev/null; then
+    alias locate="noglob glocate"
+    [[ -f "$HOME/locatedb" ]] && export LOCATE_PATH="$HOME/locatedb"
+fi
