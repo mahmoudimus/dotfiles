@@ -20,3 +20,19 @@ ITEMS=($(command /bin/ls -1 ${CWD}/sourceable_*.sh))
 for item in ${ITEMS}; do
     source $item
 done
+
+_SYSTEM_UNAME="$(uname -s)"
+case "${_SYSTEM_UNAME}" in
+    Linux*)     machine=Linux;;
+    Darwin*)    machine=Mac;;
+    CYGWIN*)    machine=Cygwin;;
+    MINGW*)     machine=MinGw;;
+    *)          machine="UNKNOWN_${_SYSTEM_UNAME}"
+esac
+unset _SYSTEM_UNAME
+
+_ENV_FILE="${CWD}/secrets_env_${machine}.sh"
+if [[ -f "${_ENV_FILE}" ]]; then
+    source ${_ENV_FILE}
+fi
+unset _ENV_FILE
