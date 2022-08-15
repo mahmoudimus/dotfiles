@@ -35,4 +35,9 @@ _ENV_FILE="${CWD}/secrets_env_${machine}.sh"
 if [[ -f "${_ENV_FILE}" ]]; then
     source ${_ENV_FILE}
 fi
+
+_ENV_FILE="${CWD}/env_${machine}.sh"
+if [[ -f "${_ENV_FILE}" ]]; then
+    source ${_ENV_FILE}
+fi
 unset _ENV_FILE

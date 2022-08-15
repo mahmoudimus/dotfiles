@@ -36,3 +36,8 @@ source_if_exists "/usr/local/opt/z/etc/profile.d/z.sh" || true
 # source_if_exists "/usr/local/opt/z/etc/profile.d/z.sh" || true
 #[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 # source_if_exists "${HOME}/.fzf.zsh" || true #
+
+if command hash glocate > /dev/null; then
+    alias locate="noglob glocate"
+    [[ -f "$HOME/locatedb" ]] && export LOCATE_PATH="$HOME/locatedb"
+fi

@@ -28,6 +28,8 @@ SHELL=/usr/local/bin/zsh
 # Workaround for: https://github.com/sorin-ionescu/prezto/issues/1744
 #
 export HISTFILE="${ZDOTDIR:-$HOME}/.zhistory" # The path to the history file.
+export HISTSIZE=
+export HISTFILESIZE=
 
 #
 export GROOVY_HOME=/usr/local/opt/groovy/libexec
