@@ -20,7 +20,7 @@
       
     - name: install applications from Brewfile
       become: false
-      shell: brew brewdle chdir=/tmp/
+      shell: brew bundle chdir=/tmp/
       when: brewfile.changed
 
     # configure all osx defaults

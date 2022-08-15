@@ -63,7 +63,7 @@ if ! available pip3; then
     rm /tmp/get-pip.py
 fi
 
-if available pip3 && available ansible; then
+if available pip3 && ! available ansible; then
     sudo CFLAGS=-Qunused-arguments CPPFLAGS=-Qunused-arguments \
 	 /usr/local/bin/pip3 install ansible
 fi
