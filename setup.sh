@@ -15,6 +15,10 @@ abort() {
   printf "\n  \033[31mError: $@\033[0m\n\n" && exit 1
 }
 
+available() {
+  command -v $1 > /dev/null; 
+  return $?;
+}
 
 # Begin Setup
 
@@ -43,19 +47,23 @@ function install_xcode() {
 if [[ "$OSTYPE" == "darwin"* ]]; then
     install_xcode
     # install homebrew
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-    brew install python3
+    if ! available brew; then
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+      brew install python3
+    fi
 fi
 
 log 'Installing' 'Ansible'
 
 # prefer pip for installing python packages over the older easy_install
 #
-if [[ ! -x `which pip` ]]; then
-    sudo easy_install pip
+if ! available pip3; then
+    curl -fsSL https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py
+    sudo python /tmp/get-pip.py
+    rm /tmp/get-pip.py
 fi
 
-if [[ -x `which pip` && ! -x `which ansible` ]]; then
+if available pip3 && available ansible; then
     sudo CFLAGS=-Qunused-arguments CPPFLAGS=-Qunused-arguments \
 	 /usr/local/bin/pip3 install ansible
 fi
