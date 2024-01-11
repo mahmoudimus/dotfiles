@@ -1,8 +1,6 @@
 # ruby stuff
 # rbenv stuff here
 
-# java stuff
-export JAVA_HOME="$(/usr/libexec/java_home -v 1.8)"
 # graalvm build
 export MX_PYTHON_VERSION=3
 

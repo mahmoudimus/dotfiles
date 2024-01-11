@@ -87,3 +87,5 @@ start_emacs_gui() {
 alias yaegi='rlwrap yaegi'
 
 alias rgf='rg --files | rg'
+
+alias gitls='git log --topo-order --stat --pretty=format:"${_git_log_medium_format}"'

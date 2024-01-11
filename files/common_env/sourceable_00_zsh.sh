@@ -7,7 +7,6 @@ path=(
     /usr/local/{bin,sbin}
     "$path[@]"
 )
-SHELL=/usr/local/bin/zsh
 
 # # Customize to your needs for ZSH *BEFORE* the zshrc is loaded
 # # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
@@ -30,10 +29,3 @@ SHELL=/usr/local/bin/zsh
 export HISTFILE="${ZDOTDIR:-$HOME}/.zhistory" # The path to the history file.
 export HISTSIZE=
 export HISTFILESIZE=
-
-#
-export GROOVY_HOME=/usr/local/opt/groovy/libexec
-# TODO move..
-eval "$(jenv init -)"
-eval "$(nodenv init -)"
-eval "$(direnv hook zsh)"
