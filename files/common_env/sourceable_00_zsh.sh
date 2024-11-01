@@ -5,8 +5,11 @@ path=(
     $HOME/bin
     $HOME/.local/bin
     /usr/local/{bin,sbin}
+    /usr/{bin,sbin}
+    /{bin,sbin}
     "$path[@]"
 )
+SHELL=/opt/homebrew/bin/zsh
 
 # # Customize to your needs for ZSH *BEFORE* the zshrc is loaded
 # # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.

@@ -12,6 +12,17 @@ fi
 unset _POSTGRES_VERSION
 
 
+# https://apple.stackexchange.com/a/410920/30557
+function heic2jpg() {
+    find . -type f -iname '*.heic' | xargs -I{} sh -c '
+  fileNoExt="${1%.*}"
+  jpgFile="${fileNoExt}_heic_conv.jpg"
+  sips -s format jpeg -s formatOptions best "$1" --out "$jpgFile"
+  touch -r "$1" "$jpgFile"
+  rm "$1"
+  ' sh {}
+}
+
 ARCH=$(uname -m)
 case $ARCH in
       x86_64|i?86_64*|i?386)
