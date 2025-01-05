@@ -48,18 +48,19 @@ esac
 source_if_exists "${HOMEBREW_PREFIX}/opt/z/etc/profile.d/z.sh" || true
 
 # Source virtual env wrapper
+# We do not need virtualenvwrapper anymore, we just need pyenv
 # VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python3
 # export VIRTUALENVWRAPPER_VIRTUALENV_ARGS='--no-site-packages'
-export WORKON_HOME=$HOME/.virtualenvs
-export VIRTUALENVWRAPPER_PYTHON=${HOMEBREW_PREFIX}/bin/python3
-export PIP_VIRTUALENV_BASE=$WORKON_HOME
-if [[ -r ${HOMEBREW_PREFIX}/bin/virtualenvwrapper.sh ]]; then
-    source ${HOMEBREW_PREFIX}/bin/virtualenvwrapper.sh
-else
-    echo "WARNING: Can't find virtualenvwrapper.sh"
-fi
+# export WORKON_HOME=$HOME/.virtualenvs
+# export VIRTUALENVWRAPPER_PYTHON=${HOMEBREW_PREFIX}/bin/python3
+# export PIP_VIRTUALENV_BASE=$WORKON_HOME
+# if [[ -r ${HOMEBREW_PREFIX}/bin/virtualenvwrapper.sh ]]; then
+#     source ${HOMEBREW_PREFIX}/bin/virtualenvwrapper.sh
+# else
+#     echo "WARNING: Can't find virtualenvwrapper.sh"
+# fi
 
-export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
+# export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
 
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
@@ -71,13 +72,18 @@ eval "$(pyenv init -)"
 eval "$(jenv init -)"
 eval "$(nodenv init -)"
 eval "$(direnv hook zsh)"
-
+eval "$(rbenv init -)"
 
 # export CLOUDSDK_PYTHON="/usr/local/opt/python@3.8/libexec/bin/python"
 # source "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
 # source "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
 
-export SDKROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+SDKROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+if [[ -d "$SDKROOT" ]]; then
+    export SDKROOT
+elif [[ -d "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk" ]]; then
+    export SDKROOT="/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk"
+fi
 
 
 if [[ $IS_BASH ]]; then

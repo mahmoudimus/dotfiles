@@ -426,3 +426,40 @@ function e() {
 
     _emacsfun --no-wait "$@"
 }
+
+shellm () {
+    local system_prompt="$(which shelllm)"
+    local raw=false
+    local args=()
+    local user_query
+    local model
+    local reasoning_amount
+    for arg in "$@"
+    do
+        case $arg in
+            (--reasoning=*) reasoning_amount=${arg#*=} && user_query+=
+"<REASONING_LENGTH>
+$reasoning_amount
+</REASONING_LENGTH>" ;;
+            (--verbosity=*) verbosity=${arg#*=} && user_query+=
+"<COT_VERBOSITY>
+$verbosity
+</COT_VERBOSITY>" ;;
+            (--raw|--r) raw=true ;;
+            (-m|--model=*) model=${arg#*=} ;;
+            (*) args+=("$arg") ;;
+        esac
+    done
+    user_query+="<request>${args[@]}</request>"
+    gemini_response=$(llm -s "$system_prompt" "$user_query" -m "$model" --no-stream -o temperature 0)
+    shelllm_command="$(echo -E "$gemini_response" | awk 'BEGIN{RS="<COMMAND>"} NR==2' | awk 'BEGIN{RS="</COMMAND>"} NR==1' | sed '/^ *#/d;/^$/d')"
+    if "$raw"
+    then
+        echo -n "$gemini_response"
+    elif [ -n "$reasoning_amount" ]
+    then
+        THINKING_TOKENS="$(echo -E "$gemini_response" | sed -n '/<THINKING>/,/<\/THINKING>/p')"
+    fi
+    print -z "$shelllm_command"
+}
+
