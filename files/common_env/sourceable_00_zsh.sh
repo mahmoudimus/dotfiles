@@ -1,9 +1,6 @@
 # Customize to your needs...
 # Set the list of directories that Zsh searches for programs.
 path=(
-    $HOME/.gitextras
-    $HOME/bin
-    $HOME/.local/bin
     /usr/local/{bin,sbin}
     /usr/{bin,sbin}
     /{bin,sbin}
