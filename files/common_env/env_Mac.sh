@@ -63,7 +63,7 @@ source_if_exists "${HOMEBREW_PREFIX}/opt/z/etc/profile.d/z.sh" || true
 # export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
 
 export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
+path[1,0]="$PYENV_ROOT/bin"
 eval "$(pyenv init --path)"
 eval "$(pyenv init -)"
 #
@@ -71,6 +71,7 @@ eval "$(pyenv init -)"
 # TODO move..
 eval "$(jenv init -)"
 eval "$(nodenv init -)"
+path[1,0]="$(nodenv root)/bin"
 eval "$(direnv hook zsh)"
 eval "$(rbenv init -)"
 
@@ -97,5 +98,19 @@ elif [[ $IS_ZSH ]]; then
         [[ -f "$HOME/locatedb" ]] && export LOCATE_PATH="$HOME/locatedb"
     fi
 fi
+
+#export HOMEBREW_CASK_OPTS="--appdir=/Applications"
+
+# env LDFLAGS="-L/usr/local/opt/libplist/lib" CPPFLAGS="-I/usr/local/opt/libplist/include" PKG_CONFIG_PATH="/usr/local/opt/libplist/lib/pkgconfig" brew install libimobiledevice ios-webkit-debug-proxy
+
+# # If you need to have $LIB first in your PATH run:
+# export PATH="/usr/local/opt/$LIB/bin:$PATH"
+
+# # For compilers to find $LIB you may need to set:
+# export LDFLAGS="-L/usr/local/opt/$LIB/lib"
+# export CPPFLAGS="-I/usr/local/opt/$LIB/include"
+
+# # For pkg-config to find $LIB you may need to set:
+# export PKG_CONFIG_PATH="/usr/local/opt/$LIB/lib/pkgconfig"
 
 source_if_exists /Users/mahmoud/.iterm2_shell_integration.zsh

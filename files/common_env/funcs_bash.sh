@@ -463,3 +463,48 @@ $verbosity
     print -z "$shelllm_command"
 }
 
+choose_editor() {
+    local editors=("emacsclient" "cursor" "code")
+    local editor_paths=()
+    local opt
+    local idx=1
+    local PS3="Select your editor (enter number): "
+    
+    echo "Detecting editor paths..."
+    for e in "${editors[@]}"; do
+        editor_path="$(command -v "$e" 2>/dev/null)"
+        if [[ -n "$editor_path" ]]; then
+            editor_paths+=("$editor_path")
+        else
+            editor_paths+=("Not found")
+        fi
+    done
+
+    echo "Choose an editor:"
+    select opt in \
+        "emacsclient: ${editor_paths[0]}" \
+        "cursor: ${editor_paths[1]}" \
+        "code: ${editor_paths[2]}" \
+        "Cancel"; do
+        case $REPLY in
+            1|2|3)
+                if [[ "${editor_paths[$((REPLY-1))]}" = "Not found" ]]; then
+                    echo "Editor '${editors[$((REPLY-1))]}' not found in PATH."
+                    return 1
+                fi
+                export VISUAL="${editor_paths[$((REPLY-1))]}"
+                export EDITOR="${editor_paths[$((REPLY-1))]}"
+                export GIT_EDITOR="${editor_paths[$((REPLY-1))]}"
+                echo "Set VISUAL, EDITOR, and GIT_EDITOR to '${editor_paths[$((REPLY-1))]}'"
+                return 0
+                ;;
+            4)
+                echo "Cancelled."
+                return 1
+                ;;
+            *)
+                echo "Invalid option. Please try again."
+                ;;
+        esac
+    done
+}

@@ -37,6 +37,7 @@ path[1,0]="$HOME/.yarn/bin"
 path[1,0]="$HOME/.gitextras"
 path[1,0]="$HOME/bin"
 path[1,0]="$HOME/.local/bin"
+path[1,0]="$HOME/.cargo/bin"
 
 # must be last file sourced
 source_if_exists "${HOME}/.fzf.zsh" || false
