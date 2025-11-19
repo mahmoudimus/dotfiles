@@ -37,6 +37,86 @@ fi
 # Define the list of tools we care about.
 tools=(clang-tidy clang-apply-replacements clang-format)
 
+
+# CLANG_CONFIG_FILE_SYSTEM_DIR: /opt/homebrew/etc/clang
+# CLANG_CONFIG_FILE_USER_DIR:   ~/.config/clang
+
+# LLD is now provided in a separate formula:
+#   brew install lld
+
+# Using `clang`, `clang++`, etc., requires a CLT installation at `/Library/Developer/CommandLineTools`.
+# If you don't want to install the CLT, you can write appropriate configuration files pointing to your
+# SDK at ~/.config/clang.
+
+# To use the bundled libunwind please use the following LDFLAGS:
+#   LDFLAGS="-L/opt/homebrew/opt/llvm/lib/unwind -lunwind"
+
+# To use the bundled libc++ please use the following LDFLAGS:
+#   LDFLAGS="-L/opt/homebrew/opt/llvm/lib/c++ -L/opt/homebrew/opt/llvm/lib/unwind -lunwind"
+
+# NOTE: You probably want to use the libunwind and libc++ provided by macOS unless you know what you're doing.
+
+# llvm is keg-only, which means it was not symlinked into /opt/homebrew,
+# because macOS already provides this software and installing another version in
+# parallel can cause all kinds of trouble.
+
+# If you need to have llvm first in your PATH, run:
+#   echo 'export PATH="/opt/homebrew/opt/llvm/bin:$PATH"' >> ~/.zshrc
+
+# For compilers to find llvm you may need to set:
+#   export LDFLAGS="-L/opt/homebrew/opt/llvm/lib"
+#   export CPPFLAGS="-I/opt/homebrew/opt/llvm/include"
+
+
+# CLANG_CONFIG_FILE_SYSTEM_DIR: /opt/homebrew/etc/clang
+# CLANG_CONFIG_FILE_USER_DIR:   ~/.config/clang
+
+# LLD is now provided in a separate formula:
+#   brew install lld
+
+# Using `clang`, `clang++`, etc., requires a CLT installation at `/Library/Developer/CommandLineTools`.
+# If you don't want to install the CLT, you can write appropriate configuration files pointing to your
+# SDK at ~/.config/clang.
+
+# To use the bundled libunwind please use the following LDFLAGS:
+#   LDFLAGS="-L/opt/homebrew/opt/llvm/lib/unwind -lunwind"
+
+# To use the bundled libc++ please use the following LDFLAGS:
+#   LDFLAGS="-L/opt/homebrew/opt/llvm/lib/c++ -L/opt/homebrew/opt/llvm/lib/unwind -lunwind"
+
+# NOTE: You probably want to use the libunwind and libc++ provided by macOS unless you know what you're doing.
+
+# llvm is keg-only, which means it was not symlinked into /opt/homebrew,
+# because macOS already provides this software and installing another version in
+# parallel can cause all kinds of trouble.
+
+# If you need to have llvm first in your PATH, run:
+#   echo 'export PATH="/opt/homebrew/opt/llvm/bin:$PATH"' >> ~/.zshrc
+
+# For compilers to find llvm you may need to set:
+#   export LDFLAGS="-L/opt/homebrew/opt/llvm/lib"
+#   export CPPFLAGS="-I/opt/homebrew/opt/llvm/include"
+
+
+VERBOSE_LOG=0
+
+verbose() {
+    if [[ "${VERBOSE_LOG}" == "1" ]]; then
+        echo "$@"
+    fi
+}
+
+# Function to print warning messages in orange
+warning() {
+    # Orange (bold yellow) color: \033[1;33m, reset: \033[0m
+    # Use escape sequences only if output is a terminal
+    if [ -t 1 ]; then
+        echo -e "\033[1;33mWARNING:\033[0m $@"
+    else
+        echo "WARNING: $@"
+    fi
+}
+
 if [[ "$machine" == "Mac" ]]; then
     # Check if brew is installed.
     if command -v brew >/dev/null 2>&1; then
@@ -49,55 +129,55 @@ if [[ "$machine" == "Mac" ]]; then
                     # Create symlink only when one does not already exist.
                     if [[ ! -e "${USER_BIN_PATH}/${tool}" ]]; then
                         ln -s "${tool_path}" "${USER_BIN_PATH}/${tool}"
-                        echo "Linked ${tool} from ${tool_path} to ${USER_BIN_PATH}"
+                        verbose "Linked ${tool} from ${tool_path} to ${USER_BIN_PATH}"
                     else
-                        echo "${tool} already exists in ${USER_BIN_PATH}"
+                        verbose "${tool} already exists in ${USER_BIN_PATH}"
                     fi
                 else
-                    echo "WARNING: ${tool} not found in ${LLVM_PREFIX}/bin"
+                    warning "${tool} not found in ${LLVM_PREFIX}/bin"
                 fi
             done
         else
-            echo "WARNING: Unable to locate the LLVM installation via brew."
+            warning "Unable to locate the LLVM installation via brew."
         fi
     else
-        echo "WARNING: brew is not installed on this Mac system."
+        warning "brew is not installed on this Mac system."
     fi
 
 elif [[ "$machine" == "Linux" ]]; then
-    echo "Linux environment detected. Attempting to link clang tools from your PATH if available."
+    verbose "Linux environment detected. Attempting to link clang tools from your PATH if available."
     for tool in ${tools[@]}; do
         # Try finding the tool in the current PATH.
         if command -v ${tool} >/dev/null 2>&1; then
             tool_path=$(command -v ${tool})
             if [[ ! -e "${USER_BIN_PATH}/${tool}" ]]; then
                 ln -s "${tool_path}" "${USER_BIN_PATH}/${tool}"
-                echo "Linked ${tool} from ${tool_path} to ${USER_BIN_PATH}"
+                verbose "Linked ${tool} from ${tool_path} to ${USER_BIN_PATH}"
             else
-                echo "${tool} already exists in ${USER_BIN_PATH}"
+                verbose "${tool} already exists in ${USER_BIN_PATH}"
             fi
         else
-            echo "WARNING: ${tool} not found in your PATH on Linux."
+            warning "${tool} not found in your PATH on Linux."
         fi
     done
 
 elif [[ "$machine" == "Cygwin" || "$machine" == "MinGw" || "$machine" == UNKNOWN* ]]; then
-    echo "Non-Mac/Linux environment detected (${machine}). Attempting to link available clang tools."
+    verbose "Non-Mac/Linux environment detected (${machine}). Attempting to link available clang tools."
     for tool in ${tools[@]}; do
         # Try locating the tool via command -v.
         if command -v ${tool} >/dev/null 2>&1; then
             tool_path=$(command -v ${tool})
             if [[ ! -e "${USER_BIN_PATH}/${tool}" ]]; then
                 ln -s "${tool_path}" "${USER_BIN_PATH}/${tool}"
-                echo "Linked ${tool} from ${tool_path} to ${USER_BIN_PATH}"
+                verbose "Linked ${tool} from ${tool_path} to ${USER_BIN_PATH}"
             else
-                echo "${tool} already exists in ${USER_BIN_PATH}"
+                verbose "${tool} already exists in ${USER_BIN_PATH}"
             fi
         else
-            echo "WARNING: ${tool} not found in your environment (${machine})."
+            warning "${tool} not found in your environment (${machine})."
         fi
     done
 
 else
-    echo "WARNING: Unrecognized machine type (${machine}). No tool symlinks were created."
+    warning "Unrecognized machine type (${machine}). No tool symlinks were created."
 fi
