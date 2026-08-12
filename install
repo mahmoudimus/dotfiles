@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+MAC_PACKAGES="main zsh ai node python rust tmux"
+SERVER_PACKAGES="bash main screen tmux"
+
+STOW_DIR=`dirname $0`
+
+pushd $STOW_DIR > /dev/null
+
+FAILED=""
+
+case $1 in
+  mac)
+    for package in $MAC_PACKAGES; do
+      stow -R $package || FAILED="$FAILED $package"
+    done
+    ;;
+  server)
+    for package in $SERVER_PACKAGES; do
+      stow -R $package || FAILED="$FAILED $package"
+    done
+    ;;
+  *)
+    echo "Invalid group"
+    exit 1
+    ;;
+esac
+
+if [ -n "$FAILED" ]; then
+  echo "Failed to stow:$FAILED" >&2
+  popd
+  exit 1
+fi
+
+popd

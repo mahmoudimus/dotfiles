@@ -1,0 +1,46 @@
+# zmodload zsh/zprof
+
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+[ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
+[ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+source "${ZINIT_HOME}/zinit.zsh"
+
+# Keybindings
+bindkey -e
+
+# Plugins
+zinit ice lucid wait
+zinit light zdharma-continuum/fast-syntax-highlighting
+
+zinit ice lucid wait
+zinit light junegunn/fzf-git.sh
+
+# Bash style word jumping
+autoload -U select-word-style
+select-word-style bash
+WORDCHARS=${WORDCHARS//[-_]}
+
+# Functions and Aliases
+[ -f ~/.functions.sh ] && . ~/.functions.sh
+[ -f ~/.aliases.sh ] && . ~/.aliases.sh
+
+# Load my local plugins
+
+for script in ~/.zsh/**/*.zsh; do
+  . $script
+done
+
+# Work
+[ -f ~/.zshrc.$WORK.zsh ] && . ~/.zshrc.$WORK.zsh
+
+# Starship
+if (($+commands[starship])); then
+  eval "$(starship init zsh)"
+fi
+
+# Oh My Posh
+# if [ "${TERM_PROGRAM}" != "Apple_Terminal" ]; then
+#   eval "$(oh-my-posh init zsh)"
+# fi
+
+# zprof

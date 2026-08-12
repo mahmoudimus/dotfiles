@@ -1,0 +1,96 @@
+[color]
+  diff = auto
+  status = auto
+  branch = auto
+  ui = auto
+[push]
+  default = current
+[alias]
+  aa = add -A
+  aw = git diff -U0 -w --no-color --src-prefix=a/ --dst-prefix=b/ | git apply --cached --ignore-whitespace --unidiff-zero -
+  ba = branch -a
+  bi = branch-i
+  br = branch
+  brm = merge --no-ff --log --no-commit
+  c = commit
+  co = checkout
+  d = diff -b
+  dc = diff --cached -b
+  devs = shortlog -sne
+  disable-hooks = config core.hooksPath /dev/null
+  dm = !git branch --merged | egrep -v \"(^\\*|master|dev)\" | xargs git branch -d
+  enable-hooks = config --unset core.hooksPath
+  fr = restore -W -S
+  l = log --graph --decorate --oneline
+  la = log --graph --decorate --oneline --branches --remotes --tags
+  ls = log --graph --decorate --oneline --stat --branches --remotes --tags
+  lsa = log --graph --decorate --oneline --stat --all --branches --remotes --tags
+  marked-unchanged = !git ls-files -v | grep ^[a-z]
+  mu = !git ls-files -v | grep ^[a-z]
+  oc = checkout
+  pr = remote prune
+  pro = remote prune origin
+  ra = rebase --autosquash
+  rmerge = merge --no-ff --no-commit
+  rs = restore -S -W
+  st = status
+  sub = submodule
+  subrm = submodule deinit
+  upstream = !git fetch upstream && git checkout main && git merge upstream/main && git push
+  users = shortlog -sne
+  w = worktree
+[status]
+  relativePaths = false
+[merge]
+  conflictstyle = zdiff3
+[diff]
+  colorMoved = default
+[diff "ruby"]
+  funcname = ^ *\\(\\(class\\|module\\|def\\) .*\\)
+[branch]
+  autosetuprebase = always
+[core]
+  excludesfile = ~/.gitconfig.ignore
+  autocrlf = input
+  pager = delta
+  precomposeunicode = true
+  fsmonitor = true
+[interactive]
+  diffFilter = delta --color-only
+[include]
+  path = .config/catppuccin.gitconfig
+[delta]
+  dark = true
+  features = catppuccin-mocha
+  line-numbers = true
+  navigate = true
+[user]
+  name = Mahmoud Abdelkader
+  email = mahmoud@verygoodsecurity.com
+[remote "origin"]
+  prune = true
+[filter "lfs"]
+  required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+[init]
+  defaultBranch = main
+[url "git@github.com:"]
+  insteadOf = https://github.com/
+[rerere]
+  enabled = true
+[pull]
+  rebase = true
+[rebase]
+  autoSquash = true
+[gpg]
+  format = ssh
+[gpg "ssh"]
+  program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+[commit]
+  gpgsign = false
+[feature]
+  manyFiles = true
+[checkout]
+  workers = 4

@@ -1,0 +1,34 @@
+[window]
+option_as_alt = "Both"
+startup_mode = "Maximized"
+decorations = "Buttonless"
+padding = { x = 10, y = 10 }
+dynamic_padding = true
+opacity = 0.98
+
+[font]
+size = 24.0
+
+[font.normal]
+family = "SauceCodePro Nerd Font Mono"
+
+[colors]
+transparent_background_colors = true
+cursor = { text = "CellBackground", cursor = "0xc7c7c7" }
+
+[keyboard]
+bindings = [
+  { key = "+", mods = "Command|Shift", action = "IncreaseFontSize" },
+  { key = "-", mods = "Command", action = "DecreaseFontSize" },
+  { key = "=", mods = "Command", action = "ResetFontSize" },
+  { key = "Left", mods = "Alt", chars = "\u001bb" }, # Skip word left
+  { key = "Right", mods = "Alt", chars = "\u001bf" }, # Skip word right
+  { key = "Back", mods = "Command", chars = "\u0015" }, # Delete line
+  { key = "Back", mods = "Alt", chars = "\u001b\u007f" }, # Delete word
+]
+
+[general]
+import = [
+"~/.alacritty.terminalizer.toml",
+#"~/src/blizzard-colors/alacritty/blizzard-theme.toml",
+]

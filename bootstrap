@@ -1,0 +1,41 @@
+#!/bin/sh
+
+case $1 in
+  mac)
+    ;;
+  server)
+    ;;
+  *)
+    echo "Invalid package list"
+    exit 1
+esac
+
+# First install brew on a mac
+if [ `uname` = "Darwin" ]; then
+  which brew &>/dev/null || \
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+  # Install git and stow
+  brew install git stow
+elif [ `uname` = "FreeBSD" ]; then
+  sudo pkg install git stow
+fi
+
+# Now that git is available let's check out or update our dotfiles
+if [ -d ~/.dotfiles ]; then
+  PREV=`pwd`
+  cd ~/.dotfiles
+  git pull
+  cd $PREV
+else
+  # TODO: drop -b stow-migration once this branch is merged to master
+  git clone -b stow-migration git@github.com:mahmoudimus/dotfiles.git ~/.dotfiles
+fi
+
+# Stow install our apps
+~/.dotfiles/install $1
+
+# Run the update
+if [ "$1" = "mac" ]; then
+  ~/bin/update
+fi
