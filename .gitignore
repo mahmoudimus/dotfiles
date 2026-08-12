@@ -8,6 +8,9 @@ node_modules
 # Main Ignores
 .gitconfig.user
 
+# Runtime state that lands in .config because it's symlinked wholesale
+main/.config/gh
+
 # Tmuxinator
 .tmuxinator
 
