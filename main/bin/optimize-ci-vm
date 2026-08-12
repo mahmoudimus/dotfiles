@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+#
+# Strip a GitHub Actions macOS runner (or any throwaway macOS VM) down to
+# just what's needed for iOS build/test work. NOT meant for a daily-driver
+# Mac — this disables crash reporting, Safari agents, and other services
+# that are fine to lose on a VM that gets torn down after the job but that
+# you'd probably miss on a real machine.
+#
+# via @cryo-kronos
+
+set -euo pipefail
+
+# GUI and animation related things to tweak
+defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -bool false
+defaults write NSGlobalDomain NSWindowResizeTime -float 0.001
+defaults write -g QLPanelAnimationDuration -float 0
+defaults write com.apple.dock autohide-time-modifier -float 0
+defaults write com.apple.dock launchanim -bool false
+sudo sysctl debug.lowpri_throttle_enabled=0
+
+# There are in general many services used by Apple, so if you find any
+# other useless service that can be removed, add it below. Use the
+# following to see all services in play: `launchctl list`
+SERVICES=(
+  # General services not needed for iOS CI builds
+  com.apple.CallHistoryPluginHelper
+  com.apple.AddressBook.abd
+  com.apple.ap.adprivacyd
+  com.apple.ReportPanic
+  com.apple.ReportCrash
+  com.apple.ReportCrash.Self
+  com.apple.DiagnosticReportCleanup.plist
+  com.apple.siriknowledged
+  com.apple.helpd
+  com.apple.mobiledeviceupdater
+  com.apple.screensharing.MessagesAgent
+  com.apple.TrustEvaluationAgent
+  com.apple.iTunesHelper.launcher
+  com.apple.softwareupdate_notify_agent
+  com.apple.appstoreagent
+  com.apple.familycircled
+
+  # Safari isn't used on these VMs
+  com.apple.SafariCloudHistoryPushAgent
+  com.apple.Safari.SafeBrowsing.Service
+  com.apple.SafariNotificationAgent
+  com.apple.SafariPlugInUpdateNotifier
+  com.apple.SafariHistoryServiceAgent
+  com.apple.SafariLaunchAgent
+  com.apple.safaridavclient
+)
+
+for service in "${SERVICES[@]}"; do
+  sudo launchctl remove "$service" || true
+done
