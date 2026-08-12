@@ -25,3 +25,6 @@ gh extension upgrade --all
 
 # Update Python
 [[ $+commands["update-python"] ]] && update-python
+
+# Update Rust
+[[ $+commands["update-rust"] ]] && update-rust
