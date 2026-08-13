@@ -1,0 +1,8 @@
+[user]
+  name = Mahmoud Abdelkader
+  email = mahmoud@verygoodsecurity.com
+  signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID3TOHoF8jI4zd0WFXHAnld3lOK+0MFLDS7LbRagX0xl
+[commit]
+  gpgsign = true
+[gpg "ssh"]
+  allowedSignersFile = ~/.ssh/allowed_signers

@@ -94,6 +94,8 @@
   manyFiles = true
 [checkout]
   workers = 4
+[includeIf "gitdir:~/src/vgs/"]
+  path = .gitconfig.vgs
 [credential "https://github.com"]
 	helper = 
 	helper = !/opt/homebrew/bin/gh auth git-credential
