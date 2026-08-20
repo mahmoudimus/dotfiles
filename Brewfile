@@ -67,6 +67,7 @@ brew 'zsh'
 # Apps
 cask '1password-cli'
 cask 'aerospace'
+cask 'bettershot'
 cask 'claude-code'
 cask 'claude'
 cask 'codex-app'
