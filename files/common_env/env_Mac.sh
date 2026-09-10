@@ -2,7 +2,9 @@
 SHELL=/opt/homebrew/bin/zsh
 
 # java stuff
-export JAVA_HOME="$(/usr/libexec/java_home -v 1.8)"
+# JAVA_HOME is deliberately not set here. `jenv init -` unsets it a few lines
+# down, and sdkman-init.sh (sourced later from gauss.local.sh) sets the value
+# that actually survives, so the java_home call here only cost ~70ms per shell.
 
 
 _POSTGRES_VERSION=13
@@ -63,17 +65,38 @@ source_if_exists "${HOMEBREW_PREFIX}/opt/z/etc/profile.d/z.sh" || true
 # export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
 
 export PYENV_ROOT="$HOME/.pyenv"
-path[1,0]="$PYENV_ROOT/bin"
-eval "$(pyenv init --path)"
-eval "$(pyenv init -)"
-#
+export NODENV_ROOT="${NODENV_ROOT:-$HOME/.nodenv}"
+
+# Version managers used to cost one subprocess apiece on every interactive
+# shell (`eval "$(foo init -)"`), roughly 0.7s in total. Putting the shims on
+# PATH is the only part that has to happen before you actually run one, so do
+# that directly and defer each manager's own init to its first invocation.
+# The order below reproduces what the eager inits used to leave behind.
+path[1,0]=(
+  "$HOME/.rbenv/shims"
+  "$NODENV_ROOT/bin"
+  "$NODENV_ROOT/shims"
+  "$HOME/.jenv/shims"
+  "$PYENV_ROOT/shims"
+  "$PYENV_ROOT/bin"
+)
+
 # export GROOVY_HOME=/usr/local/opt/groovy/libexec
 # TODO move..
-eval "$(jenv init -)"
-eval "$(nodenv init -)"
-path[1,0]="$(nodenv root)/bin"
+_lazy_version_manager() {
+  local mgr=$1
+  shift
+  unfunction "$mgr"
+  eval "$(command "$mgr" init -)"
+  "$mgr" "$@"
+}
+for _mgr in pyenv rbenv nodenv jenv; do
+  eval "${_mgr}() { _lazy_version_manager ${_mgr} \"\$@\" }"
+done
+unset _mgr
+
+# direnv installs a precmd hook, so it genuinely has to load eagerly.
 eval "$(direnv hook zsh)"
-eval "$(rbenv init -)"
 
 # export CLOUDSDK_PYTHON="/usr/local/opt/python@3.8/libexec/bin/python"
 # source "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
