@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-MAC_PACKAGES="main zsh ai node python rust tmux"
+MAC_PACKAGES="main macos zsh ai node python rust tmux"
 SERVER_PACKAGES="bash main screen tmux"
 
 STOW_DIR=`dirname $0`

@@ -27,6 +27,7 @@ that machine (see `MAC_PACKAGES`/`SERVER_PACKAGES` in `install`).
 | Package | Contents |
 |---|---|
 | `main`  | git/ssh/shell env config, `~/.config/*` (starship, ghostty, k9s, bat, atuin, …), `~/bin` scripts |
+| `macos` | macOS-only config: `~/Library/Preferences/nsmb.conf` (SMB client) |
 | `zsh`   | `.zshrc`, `.zprofile`, `.zsh/*.zsh` fragments, zinit-managed plugins |
 | `bash`  | bash equivalents, for `server` hosts without zsh |
 | `node`  | nodenv + pnpm setup |
@@ -53,6 +54,9 @@ that machine (see `MAC_PACKAGES`/`SERVER_PACKAGES` in `install`).
   under `$HOME`) and re-run `stow -R <package>`.
 - Adding a new package: create the directory, add it to `MAC_PACKAGES`
   and/or `SERVER_PACKAGES` in `install`.
+- The `macos` package relies on `~/Library/Preferences` already existing,
+  which it does on any real macOS account. If it were missing, stow would
+  fold the whole directory into a symlink rather than linking the one file.
 - `stow` refuses to touch a package if any of its target paths already
   exist as real (non-symlink) files — back up and remove the conflicting
   file first, then re-run `stow -R`.
