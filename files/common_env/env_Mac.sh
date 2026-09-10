@@ -114,3 +114,18 @@ fi
 # export PKG_CONFIG_PATH="/usr/local/opt/$LIB/lib/pkgconfig"
 
 source_if_exists /Users/mahmoud/.iterm2_shell_integration.zsh
+
+function export_llm_keys() {
+    if command -v op &> /dev/null; then
+        export KIMI_API_KEY=$(op read "op://Private/KIMI_API_KEY/credential")
+        export NVIDIA_NIM_API_KEY=$(op read "op://Private/NVIDIA_NIM_API_KEY/credential")
+    fi
+}
+# ---------------------------------------------------------------------------
+# IDA Pro / d810
+#
+# IDA_SDK and IDA_INSTALL_DIR are deliberately NOT set here -- they live in
+# ~/dotfiles/files/zsh/zshenv. This file is reached via last_configs() in
+# sourcer.sh, which .zshrc sources, so it only runs for INTERACTIVE shells;
+# d810 builds launched from a non-interactive zsh would miss IDA_SDK and
+# re-clone the SDK into every worktree. See the comment in zshenv.
