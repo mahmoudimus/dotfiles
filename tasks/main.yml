@@ -13,6 +13,20 @@
     - funcs_bash.sh
     - sourcer.sh
 
+- name: ensure ~/Library/Preferences exists
+  file: path=/Users/mahmoud/Library/Preferences state=directory
+  when: ansible_distribution == 'MacOSX'
+
+# User-level rather than /etc/nsmb.conf so this needs no sudo and touches no
+# system files. Note: if /etc/nsmb.conf exists on a machine it takes precedence
+# for any key both files set, so remove it there if you want this one to rule.
+- name: install user-level SMB client configuration
+  file: src=/Users/mahmoud/dotfiles/files/macos/nsmb.conf
+        path=/Users/mahmoud/Library/Preferences/nsmb.conf
+        state=link
+        force=yes
+  when: ansible_distribution == 'MacOSX'
+
 # this part is handled by zsh setup script
 # - name: get current active shell
 #   shell: |
