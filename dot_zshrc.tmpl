@@ -126,6 +126,14 @@ fi
 [[ -d $HOME/.cargo/bin ]] && path+="$HOME/.cargo/bin"
 export PATH
 
+# ===== fragments =====
+# ~/.zsh/*.zsh: version managers, secrets. Sourced after the paths above so
+# version-manager shims take precedence over Homebrew.
+for _zsh_fragment in ~/.zsh/*.zsh(N.); do
+  source "$_zsh_fragment"
+done
+unset _zsh_fragment
+
 # wordchars
 # Remove path separator from WORDCHARS.
 WORDCHARS=${WORDCHARS//[\/]}

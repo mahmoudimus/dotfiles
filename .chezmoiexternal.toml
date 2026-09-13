@@ -13,7 +13,7 @@ refreshPeriod = "168h"
 type = "archive"
 url = "https://github.com/gpakosz/.tmux/archive/refs/heads/master.tar.gz"
 stripComponents = 1
-exact = true
+# Not exact: that would delete ~/.tmux/plugins, including the tpm external below.
 refreshPeriod = "672h" # 4w
 
 [".tmux/plugins/tpm"]
