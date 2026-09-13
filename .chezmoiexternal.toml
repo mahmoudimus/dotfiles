@@ -1,0 +1,30 @@
+# {{ if eq .chezmoi.os "windows" -}}
+# ["AppData/Roaming/.emacs.d"]
+# {{- else -}}
+# [".emacs.d"]
+# {{- end }}
+[".emacs.d"]
+type = "git-repo"
+url = "https://github.com/plexus/chemacs2.git"
+refreshPeriod = "168h"
+
+# Ref: https://github.com/gpakosz/.tmux
+[".tmux"]
+type = "archive"
+url = "https://github.com/gpakosz/.tmux/archive/refs/heads/master.tar.gz"
+stripComponents = 1
+exact = true
+refreshPeriod = "672h" # 4w
+
+[".tmux/plugins/tpm"]
+type = "git-repo"
+url = "https://github.com/tmux-plugins/tpm"
+refreshPeriod = "168h"
+
+[".local/share/zinit/zinit.git"]
+type = "git-repo"
+url = "https://github.com/zdharma-continuum/zinit.git"
+refreshPeriod = "168h"
+  [".local/share/zinit/zinit.git".pull]
+    args = ["--rebase", "--autostash"]
+
