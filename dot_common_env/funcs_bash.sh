@@ -1,3 +1,6 @@
+# .zshrc defines `alias ..="cd .."`, and an alias shadows a function of the same
+# name, so `.. 3` would run `cd .. 3`. This function is a superset; let it win.
+unalias .. 2>/dev/null
 function .. (){
     local arg=${1:-1};
     local dir=""
@@ -8,18 +11,19 @@ function .. (){
     cd $dir >&/dev/null
 }
 
-function realpath() {
-    OURPWD=$PWD
+# Fallback only: macOS 13+ and Linux ship realpath(1). Runs in a subshell so the
+# cds never land on the directory stack (AUTO_PUSHD is on in .zshrc).
+if ! command -v realpath > /dev/null 2>&1; then
+realpath() (
     cd "$(dirname "$1")"
     LINK=$(readlink "$(basename "$1")")
     while [ "$LINK" ]; do
         cd "$(dirname "$LINK")"
         LINK=$(readlink "$(basename "$1")")
     done
-    REALPATH="$PWD/$(basename "$1")"
-    cd "$OURPWD"
-    echo $REALPATH
-}
+    echo "$PWD/$(basename "$1")"
+)
+fi
 
 function extract () {
     if [ -f $1 ] ; then
@@ -144,7 +148,7 @@ function setup_gihub_repo() {
     if [ -d .git ]; then
         git remote add origin $GIT_REPO
         git push -u origin master
-        exit $?
+        return $?
     fi
     cwd=$(pwd)
     git init
@@ -269,7 +273,9 @@ function source_if_exists(){
     #     do_it
     # fi
     if [[ -s "$1" ]]; then source "$1"; return $?; fi
-    return false
+    # Not `return false`: zsh evaluates that as arithmetic, where the unset
+    # name `false` is 0, so a missing file reported success.
+    return 1
 }
 
 
@@ -297,7 +303,7 @@ function pathprepend() {
     #  - adds the new directory to the beginning of the path
     for ((i=$#; i>0; i--));
     do
-        ARG=${!i}
+        eval "ARG=\${$i}"  # ${!i} is bash-only
         if [ -d "$ARG" ] && [[ ":$PATH:" != *":$ARG:"* ]]; then
             PATH="$ARG${PATH:+":$PATH"}" # adds to the front of the path
         fi
@@ -308,27 +314,31 @@ function pathprepend() {
 # path - a colon delimited list. Defaults to $PATH is not specified.
 # RETURNS: `path` with duplicated directories removed
 function path_unique() {
-    in_path=${1:-$PATH}
-    path=':'
+    # Not named `path`: in zsh that is tied to $PATH, so assigning it clobbered PATH.
+    local in_path=${1:-$PATH}
+    local _path=':'
 
-    # Wrap the while loop in '{}' to be able to access the updated `path variable
+    local dir left
+
+    # Wrap the while loop in '{}' to be able to access the updated `_path variable
     # as the `while` loop is run in a subshell due to the piping to it.
     # https://stackoverflow.com/questions/4667509/shell-variables-set-inside-while-loop-not-visible-outside-of-it
+    # (tr from PATH: macOS has no /bin/tr, only /usr/bin/tr.)
     printf '%s\n' "$in_path" \
-        | /bin/tr -s ':' '\n'    \
+        | tr -s ':' '\n'    \
         | {
         while read -r dir; do
-            left="${path%:$dir:*}" # remove last occurrence to end
-            if [ "$path" = "$left" ]; then
+            left="${_path%:$dir:*}" # remove last occurrence to end
+            if [ "$_path" = "$left" ]; then
                 # PATH doesn't contain $dir
-                path="$path$dir:"
+                _path="$_path$dir:"
             fi
         done
         # strip ':' pads
-        path="${path#:}"
-        path="${path%:}"
+        _path="${_path#:}"
+        _path="${_path%:}"
         # return
-        printf '%s\n' "$path"
+        printf '%s\n' "$_path"
     }
 }
 
@@ -466,36 +476,36 @@ $verbosity
 choose_editor() {
     local editors=("emacsclient" "cursor" "code")
     local editor_paths=()
-    local opt
-    local idx=1
+    local labels=()
+    local opt e editor_path chosen name
     local PS3="Select your editor (enter number): "
-    
+
     echo "Detecting editor paths..."
     for e in "${editors[@]}"; do
         editor_path="$(command -v "$e" 2>/dev/null)"
-        if [[ -n "$editor_path" ]]; then
-            editor_paths+=("$editor_path")
-        else
-            editor_paths+=("Not found")
+        if [[ -z "$editor_path" ]]; then
+            editor_path="Not found"
         fi
+        editor_paths+=("$editor_path")
+        labels+=("$e: $editor_path")
     done
 
+    # ${arr[@]:offset:1} is 0-based in both bash and zsh. The old ${arr[0]}
+    # is empty in zsh (1-based arrays), so every choice picked the wrong editor.
     echo "Choose an editor:"
-    select opt in \
-        "emacsclient: ${editor_paths[0]}" \
-        "cursor: ${editor_paths[1]}" \
-        "code: ${editor_paths[2]}" \
-        "Cancel"; do
+    select opt in "${labels[@]}" "Cancel"; do
         case $REPLY in
             1|2|3)
-                if [[ "${editor_paths[$((REPLY-1))]}" = "Not found" ]]; then
-                    echo "Editor '${editors[$((REPLY-1))]}' not found in PATH."
+                chosen="${editor_paths[@]:$((REPLY-1)):1}"
+                name="${editors[@]:$((REPLY-1)):1}"
+                if [[ "$chosen" = "Not found" ]]; then
+                    echo "Editor '$name' not found in PATH."
                     return 1
                 fi
-                export VISUAL="${editor_paths[$((REPLY-1))]}"
-                export EDITOR="${editor_paths[$((REPLY-1))]}"
-                export GIT_EDITOR="${editor_paths[$((REPLY-1))]}"
-                echo "Set VISUAL, EDITOR, and GIT_EDITOR to '${editor_paths[$((REPLY-1))]}'"
+                export VISUAL="$chosen"
+                export EDITOR="$chosen"
+                export GIT_EDITOR="$chosen"
+                echo "Set VISUAL, EDITOR, and GIT_EDITOR to '$chosen'"
                 return 0
                 ;;
             4)

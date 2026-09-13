@@ -126,13 +126,16 @@ fi
 [[ -d $HOME/.cargo/bin ]] && path+="$HOME/.cargo/bin"
 export PATH
 
-# ===== fragments =====
-# ~/.zsh/*.zsh: version managers, secrets. Sourced after the paths above so
-# version-manager shims take precedence over Homebrew.
-for _zsh_fragment in ~/.zsh/*.zsh(N.); do
-  source "$_zsh_fragment"
-done
-unset _zsh_fragment
+# ===== common_env =====
+# ~/.common_env, the same layout as master's files/common_env. Sourced after the
+# paths above so it can prepend to them (version-manager shims win over
+# Homebrew), and before bun/SDKMAN, which must stay last.
+typeset -aU path
+source ~/.common_env/exports_bash.sh
+source ~/.common_env/funcs_bash.sh
+source ~/.common_env/aliases.sh
+source ~/.common_env/sourcer.sh   # sourceable_*.sh, in order
+last_configs                      # secrets_env_<OS>.sh, env_<OS>.sh, <host>.sh
 
 # wordchars
 # Remove path separator from WORDCHARS.

@@ -1,6 +1,8 @@
-alias ll='ls -lha'
+# .zshrc defines a richer eza-based ll; only fall back when nothing did.
+alias ll > /dev/null 2>&1 || alias ll='ls -lha'
 # some more ls aliases
-alias beauty="bcpp -fi $1 >$2"
+# A function: aliases take no positional args, so $1/$2 expanded to nothing.
+beauty() { bcpp -fi "$1" > "$2"; }
 
 #alias for gvim to make it amazing
 alias gvim='gvim -p --remote-tab-silent'
@@ -24,7 +26,10 @@ alias meminfo="echo -e '/proc/meminfo:\n';grep --color=auto '^[Mem|Swap]*[Free|T
 
 alias n="nosetests"
 
-alias git=hub
+# Only when hub is installed; otherwise this alias breaks git entirely.
+if command -v hub > /dev/null 2>&1; then
+    alias git=hub
+fi
 
 #cdpluto
 cdpluto()
@@ -88,4 +93,6 @@ alias yaegi='rlwrap yaegi'
 
 alias rgf='rg --files | rg'
 
-alias gitls='git log --topo-order --stat --pretty=format:"${_git_log_medium_format}"'
+# The format used to come from prezto's git module ($_git_log_medium_format),
+# which is not loaded any more; inlined here.
+alias gitls='git log --topo-order --stat --pretty=format:"%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B"'

@@ -1,4 +1,12 @@
-export HOMEBREW_GITHUB_API_TOKEN=$(security find-generic-password -s 'HOMEBREW_GITHUB_API_TOKEN' -w)
+# Keychain lookups need no sign-in and cost ~20ms. Each variable is exported
+# only when its item exists: a missing item used to print a `security` error in
+# every new shell (which also trips p10k's instant prompt) and export an empty
+# value.
+_hb_token=$(security find-generic-password -s 'HOMEBREW_GITHUB_API_TOKEN' -w 2>/dev/null)
+if [ -n "$_hb_token" ]; then
+    export HOMEBREW_GITHUB_API_TOKEN="$_hb_token"
+fi
+unset _hb_token
 
 # GITHUB_TOKEN comes from Keychain, not from a literal op:// reference.
 #

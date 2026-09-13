@@ -1,11 +1,11 @@
-SHELL=/usr/bin/zsh
 # java stuff
 if [ -f "$(which javac)" ]; then
     export JAVA_HOME=$(dirname $(dirname $(readlink -e $(which javac))))
 fi
 
 # Automatically start dbus
-sudo /etc/init.d/dbus start &> /dev/null
+# -n: never prompt. Without it every new shell could stop at a sudo password prompt.
+sudo -n /etc/init.d/dbus start &> /dev/null
 
 
 if [[ $IS_WSL ]]; then

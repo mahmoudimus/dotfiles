@@ -1,9 +1,10 @@
-# do we have postgres cli?
-SHELL=/opt/homebrew/bin/zsh
+# SHELL is not set here: the login shell sets it, and the old hardcoded
+# /opt/homebrew/bin/zsh does not exist on every machine.
 
+# do we have postgres cli?
 # java stuff
 # JAVA_HOME is deliberately not set here. `jenv init -` unsets it a few lines
-# down, and sdkman-init.sh (sourced later from gauss.local.sh) sets the value
+# down, and sdkman-init.sh (sourced at the end of .zshrc) sets the value
 # that actually survives, so the java_home call here only cost ~70ms per shell.
 
 
@@ -25,24 +26,29 @@ function heic2jpg() {
   ' sh {}
 }
 
-ARCH=$(uname -m)
-case $ARCH in
-      x86_64|i?86_64*|i?386)
-        HOMEBREW_PREFIX="/usr/local"
-        eval "$(${HOMEBREW_PREFIX}/Homebrew/bin/brew shellenv)";
-        ;;
-      arm64*)
-        HOMEBREW_PREFIX="/opt/homebrew"
-        path[1,0]="${HOMEBREW_PREFIX}/bin"
-        path[1,0]="${HOMEBREW_PREFIX}/sbin"
-        path[1,0]="${HOMEBREW_PREFIX}/opt/openssl@1.1/bin"
-        eval "$(${HOMEBREW_PREFIX}/bin/brew shellenv)";
-        ;;
-      *)
-        echo "Unsupported host arch. Must be x86_64, 386, or arm64" >&2
-        exit 1
-        ;;
-esac
+# .zshrc already ran `brew shellenv`, which sets HOMEBREW_PREFIX; only fall
+# back to doing it here when it did not.
+if [[ -z "$HOMEBREW_PREFIX" ]]; then
+    ARCH=$(uname -m)
+    case $ARCH in
+          x86_64|i?86_64*|i?386)
+            HOMEBREW_PREFIX="/usr/local"
+            eval "$(${HOMEBREW_PREFIX}/Homebrew/bin/brew shellenv)";
+            ;;
+          arm64*)
+            HOMEBREW_PREFIX="/opt/homebrew"
+            eval "$(${HOMEBREW_PREFIX}/bin/brew shellenv)";
+            ;;
+          *)
+            # return, not exit: this file is sourced, and exit closed the shell.
+            echo "Unsupported host arch. Must be x86_64, 386, or arm64" >&2
+            return 1
+            ;;
+    esac
+    unset ARCH
+fi
+# openssl@1.1 is disabled in Homebrew; (N/) skips it when it is not installed.
+path[1,0]=("${HOMEBREW_PREFIX}/opt/openssl@1.1/bin"(N/))
 
 
 # The next line enables z - jump around
@@ -64,7 +70,7 @@ source_if_exists "${HOMEBREW_PREFIX}/opt/z/etc/profile.d/z.sh" || true
 
 # export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
 
-export PYENV_ROOT="$HOME/.pyenv"
+export PYENV_ROOT="${PYENV_ROOT:-$HOME/.pyenv}"
 export NODENV_ROOT="${NODENV_ROOT:-$HOME/.nodenv}"
 
 # Version managers used to cost one subprocess apiece on every interactive
@@ -72,13 +78,18 @@ export NODENV_ROOT="${NODENV_ROOT:-$HOME/.nodenv}"
 # PATH is the only part that has to happen before you actually run one, so do
 # that directly and defer each manager's own init to its first invocation.
 # The order below reproduces what the eager inits used to leave behind.
+# (N/) drops directories that do not exist, and the wrappers below are only
+# defined for managers that are installed, so machines without them pay nothing.
+#
+# Caveat: init also ran a rehash, which this skips. After installing a gem or
+# npm package, run `rbenv rehash` or `nodenv rehash` once.
 path[1,0]=(
-  "$HOME/.rbenv/shims"
-  "$NODENV_ROOT/bin"
-  "$NODENV_ROOT/shims"
-  "$HOME/.jenv/shims"
-  "$PYENV_ROOT/shims"
-  "$PYENV_ROOT/bin"
+  "$HOME/.rbenv/shims"(N/)
+  "$NODENV_ROOT/bin"(N/)
+  "$NODENV_ROOT/shims"(N/)
+  "$HOME/.jenv/shims"(N/)
+  "$PYENV_ROOT/shims"(N/)
+  "$PYENV_ROOT/bin"(N/)
 )
 
 # export GROOVY_HOME=/usr/local/opt/groovy/libexec
@@ -91,12 +102,15 @@ _lazy_version_manager() {
   "$mgr" "$@"
 }
 for _mgr in pyenv rbenv nodenv jenv; do
+  (( $+commands[$_mgr] )) || continue
   eval "${_mgr}() { _lazy_version_manager ${_mgr} \"\$@\" }"
 done
 unset _mgr
 
 # direnv installs a precmd hook, so it genuinely has to load eagerly.
-eval "$(direnv hook zsh)"
+if (( $+commands[direnv] )); then
+  eval "$(direnv hook zsh)"
+fi
 
 # export CLOUDSDK_PYTHON="/usr/local/opt/python@3.8/libexec/bin/python"
 # source "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
@@ -136,19 +150,23 @@ fi
 # # For pkg-config to find $LIB you may need to set:
 # export PKG_CONFIG_PATH="/usr/local/opt/$LIB/lib/pkgconfig"
 
-source_if_exists /Users/mahmoud/.iterm2_shell_integration.zsh
+source_if_exists "$HOME/.iterm2_shell_integration.zsh"
 
+# On demand, never at shell start: op is signed out by default and would block
+# every new terminal on a sign-in prompt.
 function export_llm_keys() {
-    if command -v op &> /dev/null; then
-        export KIMI_API_KEY=$(op read "op://Private/KIMI_API_KEY/credential")
-        export NVIDIA_NIM_API_KEY=$(op read "op://Private/NVIDIA_NIM_API_KEY/credential")
+    if ! command -v op &> /dev/null; then
+        echo "export_llm_keys: 1Password CLI (op) not found" >&2
+        return 1
     fi
+    export KIMI_API_KEY=$(op read "op://Private/KIMI_API_KEY/credential")
+    export NVIDIA_NIM_API_KEY=$(op read "op://Private/NVIDIA_NIM_API_KEY/credential")
 }
 # ---------------------------------------------------------------------------
 # IDA Pro / d810
 #
 # IDA_SDK and IDA_INSTALL_DIR are deliberately NOT set here -- they live in
-# ~/dotfiles/files/zsh/zshenv. This file is reached via last_configs() in
-# sourcer.sh, which .zshrc sources, so it only runs for INTERACTIVE shells;
-# d810 builds launched from a non-interactive zsh would miss IDA_SDK and
-# re-clone the SDK into every worktree. See the comment in zshenv.
+# ~/.zshenv (dot_zshenv in the chezmoi source). This file is reached via
+# last_configs() in sourcer.sh, which .zshrc sources, so it only runs for
+# INTERACTIVE shells; d810 builds launched from a non-interactive zsh would miss
+# IDA_SDK and re-clone the SDK into every worktree. See the comment in .zshenv.

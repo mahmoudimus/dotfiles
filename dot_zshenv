@@ -1,0 +1,31 @@
+# .zshenv is sourced by every zsh, interactive or not, so it only holds
+# variables that non-interactive processes need. Everything else lives in
+# .zshrc and ~/.common_env.
+
+# ---------------------------------------------------------------------------
+# IDA Pro / d810
+#
+# These live in .zshenv, NOT env_Mac.sh, deliberately. env_Mac.sh is reached via
+# last_configs() in sourcer.sh, which .zshrc sources -- so anything defined there
+# exists for INTERACTIVE shells only. d810 builds get launched from
+# non-interactive zsh (tmux send-keys, `zsh -c`, cron, #!/bin/zsh scripts), and
+# there IDA_SDK was unset. setup.py then falls back to
+#     DEFAULT_SDK_DIR = Path(__file__).parent / ".ida-sdk"
+# which is anchored per *worktree*, so it git-clones HexRaysSA/ida-sdk (~262M)
+# into every worktree that builds. Measured 2026-08-28: 30 clones, 7.24 GiB.
+# Deleted them; 3 more (0.77 GiB) were back by 2026-09-01. Hence: .zshenv.
+#
+# Safe to put here even though /etc/zshrc runs after .zshenv on Catalina+ --
+# that only clobbers PATH-ish values, which these are not.
+#
+# Both resolve through one pointer: ~/.idapro/extras/latest -> 94
+#   latest/ida-sdk      the SDK tree
+#   latest/ida-install  -> /Applications/IDA Professional <X.Y>.app/Contents/MacOS
+#
+# To move to a new IDA:
+#     mkdir -p ~/.idapro/extras/<NN>                      # drop ida-sdk inside
+#     ln -s "/Applications/IDA Professional <X.Y>.app/Contents/MacOS" \
+#           ~/.idapro/extras/<NN>/ida-install
+#     ln -sfn <NN> ~/.idapro/extras/latest                # -n, else it links INSIDE
+export IDA_SDK="$HOME/.idapro/extras/latest/ida-sdk"
+export IDA_INSTALL_DIR="$HOME/.idapro/extras/latest/ida-install"

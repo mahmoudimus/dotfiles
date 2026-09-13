@@ -111,9 +111,9 @@ warning() {
     # Orange (bold yellow) color: \033[1;33m, reset: \033[0m
     # Use escape sequences only if output is a terminal
     if [ -t 1 ]; then
-        echo -e "\033[1;33mWARNING:\033[0m $@"
+        echo -e "\033[1;33mWARNING:\033[0m $@" >&2
     else
-        echo "WARNING: $@"
+        echo "WARNING: $@" >&2
     fi
 }
 
@@ -121,7 +121,9 @@ if [[ "$machine" == "Mac" ]]; then
     # Check if brew is installed.
     if command -v brew >/dev/null 2>&1; then
         # Try to get the llvm prefix path
-        LLVM_PREFIX=$(brew --prefix llvm 2>/dev/null)
+        # $HOMEBREW_PREFIX/opt/llvm is what `brew --prefix llvm` prints, without
+        # a brew subprocess on every shell.
+        LLVM_PREFIX="${HOMEBREW_PREFIX:-$(brew --prefix)}/opt/llvm"
         if [[ -n "${LLVM_PREFIX}" && -d "${LLVM_PREFIX}/bin" ]]; then
             for tool in ${tools[@]}; do
                 tool_path="${LLVM_PREFIX}/bin/${tool}"
@@ -181,3 +183,6 @@ elif [[ "$machine" == "Cygwin" || "$machine" == "MinGw" || "$machine" == UNKNOWN
 else
     warning "Unrecognized machine type (${machine}). No tool symlinks were created."
 fi
+
+unset -f verbose warning
+unset VERBOSE_LOG LLVM_PREFIX tools tool tool_path

@@ -1,21 +1,17 @@
 set +x
 
 # 0 is true, all others are false (think exit codes)
+#
+# $OSTYPE instead of `uname`: no subprocess, and the old `$(uname) =~ darwin`
+# tests never matched because uname prints "Darwin", so IS_MAC was never set.
+case "$OSTYPE" in
+    linux*)  export IS_LINUX=0 ;;
+    darwin*) export IS_MAC=0 ;;
+    cygwin*) export IS_CYGWIN=0 ;;
+esac
 
-if [[ $(uname) =~ linux ]]; then
-  export IS_LINUX=0
-fi
-
-if [[ $IS_LINUX && $(uname -a) =~ Microsoft ]]; then
+if [[ $IS_LINUX && -r /proc/version && "$(</proc/version)" =~ [Mm]icrosoft ]]; then
   export IS_WSL=0
-fi
-
-if [[ $(uname) =~ darwin ]]; then
-  export IS_MAC=0
-fi
-
-if [[ $(uname) =~ cygwin_nt ]]; then
-  export IS_CYGWIN=0
 fi
 
 if [ -n "$ZSH_VERSION" ]; then
@@ -26,23 +22,20 @@ elif [ -n "$BASH_VERSION" ]; then
     export IS_BASH=0
 fi
 
-CWD=$(realpath $(dirname $LOC))
+# Directory holding this file (~/.common_env). A subshell, so the cd never
+# touches the directory stack (AUTO_PUSHD is on in .zshrc).
+COMMON_ENV_DIR=$(cd "$(dirname "$LOC")" && pwd -P)
+unset LOC
 
 function load_the_files() {
-    # since ls can be aliased by the time we're called and it can effect
-    # the output of this command
-    ITEMS=($(command /bin/ls -1 ${CWD}/sourceable_*.sh))
-
-    # TODO: alternative way to iterate through with bash instead of of zsh?
-    # for (( i=0; i<=${#ITEMS[@]} ; i+=1 )) ; do
-    #     echo "${ITEMS[i]}"
-    # done
-
-    for item in ${ITEMS}; do
-        source $item
+    local item
+    for item in "${COMMON_ENV_DIR}"/sourceable_*.sh; do
+        [ -f "$item" ] && source "$item"
     done
 }
 
+# Called by .zshrc after this file: secrets_env_<Machine>.sh, then
+# env_<Machine>.sh, then <short hostname>.sh.
 function last_configs() {
 
     _SYSTEM_UNAME="$(uname -s)"
@@ -55,22 +48,24 @@ function last_configs() {
     esac
     unset _SYSTEM_UNAME
 
-    _ENV_FILE="${CWD}/secrets_env_${machine}.sh"
+    _ENV_FILE="${COMMON_ENV_DIR}/secrets_env_${machine}.sh"
     if [[ -f "${_ENV_FILE}" ]]; then
-        source ${_ENV_FILE}
+        source "${_ENV_FILE}"
     fi
 
-    _ENV_FILE="${CWD}/env_${machine}.sh"
+    _ENV_FILE="${COMMON_ENV_DIR}/env_${machine}.sh"
     if [[ -f "${_ENV_FILE}" ]]; then
-        source ${_ENV_FILE}
+        source "${_ENV_FILE}"
     fi
-    unset _ENV_FILE
 
-    _ENV_FILE="${CWD}/$(uname -n).sh"
+    # Short hostname: macOS often reports "pascal.local", but the per-host
+    # files are named without the domain (gauss.sh, al-khwarizmi.sh).
+    _HOST="$(uname -n)"
+    _ENV_FILE="${COMMON_ENV_DIR}/${_HOST%%.*}.sh"
     if [[ -f "${_ENV_FILE}" ]]; then
-        source ${_ENV_FILE}
+        source "${_ENV_FILE}"
     fi
-    unset _ENV_FILE
+    unset _ENV_FILE _HOST
 }
 
 
