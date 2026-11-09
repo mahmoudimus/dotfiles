@@ -44,3 +44,6 @@ fi
 # fi
 
 # zprof
+
+if [[ -x ~/.zsh.d/init.zsh ]]; then . ~/.zsh.d/init.zsh; fi # added by dev-tools-install
+

@@ -39,3 +39,45 @@ fi
 if [ "$1" = "mac" ]; then
   ~/bin/update
 fi
+
+# Install VGS dev-tools (mac only). Runs after ~/bin/update so the Brewfile
+# (python, jq, kubectl, ...) and the 1Password SSH agent are already in place.
+# The repo is private and the installer is interactive: if GitHub access is
+# missing or the install fails, warn and carry on. No tokens are stored here;
+# the installer sets up its own GitHub SSH access and manages ~/.vgs.
+if [ "$1" = "mac" ]; then
+  DEV_TOOLS_DIR=~/src/dev-tools
+  if [ ! -d "$DEV_TOOLS_DIR/.git" ]; then
+    mkdir -p ~/src
+    GIT_SSH_COMMAND="ssh -o BatchMode=yes -o ConnectTimeout=15" \
+      git clone git@github.com:verygood-ops/dev-tools "$DEV_TOOLS_DIR" || \
+      echo "WARNING: could not clone verygood-ops/dev-tools (no GitHub access?); skipping dev-tools install. Re-run ~/.dotfiles/bootstrap mac once access works." >&2
+  fi
+  if [ -f "$DEV_TOOLS_DIR/bin/dev-tools-install" ]; then
+    # dev-tools-install takes no arguments and prompts on stdin, so give it the
+    # terminal even when this script itself was piped in (curl | sh).
+    if (: </dev/tty) 2>/dev/null; then
+      python3 "$DEV_TOOLS_DIR/bin/dev-tools-install" </dev/tty || \
+        echo "WARNING: dev-tools-install failed; re-run it by hand (python3 $DEV_TOOLS_DIR/bin/dev-tools-install)." >&2
+    else
+      echo "WARNING: no terminal available; run python3 $DEV_TOOLS_DIR/bin/dev-tools-install by hand." >&2
+    fi
+  fi
+
+  # tsh must match VGS's Teleport servers, and dev-tools-install cannot currently
+  # install it. Use the version and checksum dev-tools pins.
+  TSH_CASK="$DEV_TOOLS_DIR/Casks/tsh@vgs.rb"
+  if ! command -v tsh >/dev/null 2>&1 && [ -f "$TSH_CASK" ]; then
+    TSH_VERSION=$(sed -n 's/^ *version "\(.*\)"/\1/p' "$TSH_CASK")
+    TSH_SHA=$(sed -n 's/^ *sha256 "\(.*\)"/\1/p' "$TSH_CASK")
+    TSH_DIR=$(mktemp -d)
+    if curl -fsSL -o "$TSH_DIR/tsh.pkg" "https://cdn.teleport.dev/tsh-$TSH_VERSION.pkg" && \
+       echo "$TSH_SHA  $TSH_DIR/tsh.pkg" | shasum -a 256 -c - >/dev/null; then
+      sudo installer -pkg "$TSH_DIR/tsh.pkg" -target / || \
+        echo "WARNING: tsh install failed." >&2
+    else
+      echo "WARNING: could not download and verify tsh $TSH_VERSION; skipping." >&2
+    fi
+    /bin/rm -rf "$TSH_DIR"
+  fi
+fi

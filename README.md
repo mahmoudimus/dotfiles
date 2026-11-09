@@ -22,6 +22,12 @@ this repo into `~/.dotfiles`, then hands off to `install`, which stows each
 package with `stow -R`. Pass `mac` or `server` to pick the package set for
 that machine (see `MAC_PACKAGES`/`SERVER_PACKAGES` in `install`).
 
+On `mac`, the last step (after `bin/update` has run the Brewfile) clones the
+private `verygood-ops/dev-tools` repo to `~/src/dev-tools` and runs its
+interactive `bin/dev-tools-install`. It needs GitHub SSH access; if that is
+missing the step warns and is skipped, and can be redone by re-running
+`bootstrap mac` or running `python3 ~/src/dev-tools/bin/dev-tools-install`.
+
 ## Packages
 
 | Package | Contents |
